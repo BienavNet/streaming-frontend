@@ -1,0 +1,180 @@
+<form>
+    <div class="card">
+        <!-- <p-panel header="Register Platform Form" class="w-xl h-3/5 flex p-8 text-xl"> -->
+        <p-dialog header="Add new account" [draggable]="false" [modal]="true" [visible]="true" styleClass="w-xl"
+            [closable]="false" [blockScroll]="true" [autofocus]="true" [contentStyle]="{'overflow': 'visible'}">
+            <div class="gap-2 flex items-center flex-col mt-1">
+                <p-floatlabel variant="on" class="w-full">
+                    <input pInputText id="email" [formField]="this.registerForm.email" autocomplete="off" class="w-full" />
+                    <label for="email">Email</label>
+                </p-floatlabel>
+                <p-floatlabel variant="on" class="w-full">
+                    <input pInputText id="password" [formField]="this.registerForm.password" autocomplete="off" class="w-full" />
+                    <label for="password">Password</label>
+                </p-floatlabel>
+                <div class="card w-full flex justify-around items-center flex-row gap-2">
+                    <p-floatlabel variant="on" class="w-1/2">
+                        <p-datepicker 
+                            inputId="membershipBuyDate" 
+                            [formField]="$any(this.registerForm.membershipBuyDate)" 
+                            showIcon 
+                            iconDisplay="input" 
+                            class="w-full"
+                            appendTo="body" 
+                            dataType="string" 
+                            dateFormat="yy-mm-dd"
+                        />
+                        <label for="membershipBuyDate">Starts At</label>
+                    </p-floatlabel>
+                    <p-floatlabel variant="on" class="w-1/2">
+                        <p-datepicker 
+                            inputId="membershipExpireDate" 
+                            showIcon 
+                            iconDisplay="input" 
+                            class="w-full"
+                            appendTo="body" 
+                            [formField]="$any(this.registerForm.membershipExpireDate)"
+                            dataType="string" 
+                            dateFormat="yy-mm-dd"
+                        />
+                        <label for="membershipExpireDate">Ends At</label>
+                    </p-floatlabel>
+                </div>
+                <div class="card w-full flex justify-around items-center flex-row gap-2">
+                    <p-floatlabel variant="on" class="w-full">
+                        <p-select 
+                            [formField]="$any(this.registerForm.payment)"
+                            [options]="this.payments()" 
+                            optionValue="id"
+                            optionLabel="card" 
+                            [filter]="true" 
+                            filterBy="card"
+                            [showClear]="true" 
+                            inputId="payment" 
+                            class="w-full" 
+                            appendTo="body"
+                            (onChange)="onChangePlatformSelect($event)"
+                        >
+                            <ng-template #selectedItem let-selectedOption>
+                                <div class="flex items-center gap-2">
+                                    <div>{{ selectedOption.card }}</div>
+                                </div>
+                            </ng-template>
+                            <ng-template let-payment #item>
+                                <div class="flex items-center gap-2">
+                                    <div>{{ payment.card }}</div>
+                                </div>
+                            </ng-template>
+                            <!-- <ng-template #footer>
+                                <div class="p-3">
+                                    <p-button [label]="this.addNewPaymentIsClicked() ? 'Hide Form' : 'Add New'" fluid
+                                        severity="secondary" text size="small"
+                                        [icon]="this.addNewPaymentIsClicked() ? 'pi pi-eye-slash' : 'pi pi-plus'"
+                                        (click)="this.addNewPaymentOnClick()" />
+                                </div>
+                            </ng-template> -->
+                        </p-select>
+                        <label for="payment">Payment</label>
+                    </p-floatlabel>
+                    <p-floatlabel variant="on" class="w-full">
+                        <p-select 
+                            [formField]="$any(this.registerForm.platform)"
+                            [options]="this.platforms()"
+                            optionValue="id"
+                            inputId="platform" 
+                            optionLabel="name" 
+                            [filter]="true"
+                            filterBy="name" 
+                            [showClear]="true" 
+                            class="w-full" 
+                            appendTo="body" 
+                        >
+                            <ng-template #selectedItem let-selectedOption>
+                                <div class="flex items-center gap-2">
+                                    <div>{{ selectedOption.name }}</div>
+                                </div>
+                            </ng-template>
+                            <ng-template let-platform #item>
+                                <div class="flex items-center gap-2">
+                                    <img [src]="platform.icon" style="width: 18px" />
+                                    <div>{{ platform.name }}</div>
+                                </div>
+                            </ng-template>
+                        </p-select>
+                        <label for="platform">Platform</label>
+                    </p-floatlabel>
+
+                </div>
+                @if (this.addNewPaymentIsClicked()) {
+                <span class="form-title-separator">Add Payment</span>
+                <div class="card w-full flex justify-around items-center flex-row gap-2">
+                    <p-floatlabel variant="on" class="w-full">
+                        <input 
+                            pInputText 
+                            id="number"
+                            autocomplete="off" 
+                            class="w-full" 
+                            [formField]="this.paymentRegisterForm.number"
+                        />
+                        <label for="number">Card Number</label>
+                    </p-floatlabel>
+                    <div class="card w-full flex justify-around items-center flex-row gap-2">
+                        <p-floatlabel variant="on" class="w-full">
+                            <p-datepicker 
+                                id="month" 
+                                view="month" 
+                                dateFormat="mm" 
+                                [formField]="$any(this.paymentRegisterForm.month)"
+                                dataType="string"
+                            />
+                            <label for="month">Month</label>
+                        </p-floatlabel>
+                        <p-floatlabel variant="on" class="w-full">
+                            <p-datepicker 
+                                id="year" 
+                                view="year" 
+                                dateFormat="yy" 
+                                [formField]="$any(this.paymentRegisterForm.year)"
+                                dataType="string"
+                            />
+                            <label for="year">Year</label>
+                        </p-floatlabel>
+                        <p-floatlabel variant="on" class="w-full">
+                            <input 
+                                pInputText 
+                                id="cvv" 
+                                autocomplete="off" 
+                                class="w-full" 
+                                [formField]="this.paymentRegisterForm.cvv"
+                            />
+                            <label for="cvv">CVV</label>
+                        </p-floatlabel>
+                    </div>
+                </div>
+                <div class="card w-full flex justify-around items-center flex-row gap-2">
+                    <p-floatlabel variant="on" class="w-full">
+                        <input 
+                            pInputText 
+                            id="password" 
+                            autocomplete="off" 
+                            class="w-full" 
+                            [formField]="this.paymentRegisterForm.bankName"
+                        />
+                        <label for="password">Bank Name</label>
+                    </p-floatlabel>
+                </div>
+                }
+
+                <div class="card w-full flex justify-end items-center flex-row gap-2">
+                    <label for="freeTrial">Is free trial?</label>
+                    <p-checkbox [binary]="true" inputId="freeTrial" [formField]="this.registerForm.isFreeTrial" />
+                </div>
+            </div>
+            <div class="flex justify-end gap-2 mt-3">
+                <p-button label="Cancel" severity="secondary" (click)="this.onCloseModal.emit()" />
+                <p-button label="Save" (click)="this.saveAccountOnClick()" />
+            </div>
+        </p-dialog>
+        <!-- </p-panel> -->
+    </div>
+</form>

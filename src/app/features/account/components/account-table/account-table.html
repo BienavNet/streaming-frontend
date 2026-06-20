@@ -1,0 +1,62 @@
+<div class="w-full h-full card flex justify-center items-center">
+    <p-confirmdialog />
+    <p-panel class="w-5/6 h-11/12 flex p-8 text-xl">
+        <ng-template #header>
+            <div class="w-full flex justify-between items-center px-4">
+                <div>
+                    <span class="font-bold text-3xl">Accounts</span>
+                </div>
+                <p-button size="small" class="flex items-center justify-start gap-2 whitespace-nowrap" label="Add New"
+                    icon="pi pi-plus" severity="secondary" (click)="this.onRegisterFormModalClick()" />
+            </div>
+        </ng-template>
+        <p-table [value]="accountService.accounts()" class="w-full" [loading]="isLoading()" [scrollable]="true">
+            <ng-template #header>
+                <tr>
+                    <th>ID</th>
+                    <th>Email</th>
+                    <th>Expire At</th>
+                    <th>Platform</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </ng-template>
+            <ng-template #body let-account class="text-sm">
+                <tr>
+                    <td>{{account.id}}</td>
+                    <td>{{account.email}}</td>
+                    <td>{{account.membershipExpireDate}}</td>
+                    <td>{{account.platformName}}</td>
+                    <td>
+                        <p-button 
+                            variant="text" 
+                            [severity]="getSeverity(account.status)" 
+                            (click)="changeStatusOnClick($event, account.id, account.status)"
+                        >
+                            <p-tag [value]="account.status" [severity]="getSeverity(account.status)" />
+                        </p-button>
+                    </td>
+                    <td>
+                        <div class="card flex flex-row items-center justify-center gap-2">
+                            <p-button size="small" class="flex items-center justify-start gap-2 whitespace-nowrap"
+                                label="Info" icon="pi pi-id-card" severity="warn" />
+
+                            <p-button size="small"
+                                class="flex items-center justify-start gap-2 whitespace-nowrap w-full" label="Edit"
+                                icon="pi pi-pen-to-square" severity="info" />
+                            <p-button size="small" class="flex items-center justify-start gap-2 whitespace-nowrap"
+                                label="Delete" icon="pi pi-trash" severity="danger" />
+                            
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+
+        @if (this.isRegisterFormModalOpen()) {
+            <app-account-register-form 
+                (onCloseModal)="this.onRegisterFormModalClick()"
+            />
+        }
+    </p-panel>
+</div>

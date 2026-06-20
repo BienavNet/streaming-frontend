@@ -1,0 +1,22 @@
+<div class="card"> 
+    <p-dialog header="Edit Platform" [draggable]="false" [modal]="true" [visible]="visible" styleClass="w-80" class="" [closable]="false">
+        <div class="gap-2 flex items-center flex-col">
+            <p-floatlabel variant="in">
+                <input pInputText id="name" [formField]="editForm.name" autocomplete="off" />
+                <label for="name">Name</label>
+            </p-floatlabel>
+            <p-floatlabel variant="in">
+                <input pInputText id="link" [formField]="editForm.link" autocomplete="off" />
+                <label for="link">Link</label>
+            </p-floatlabel>
+            <p-floatlabel variant="in">
+                <input pInputText id="icon" [formField]="editForm.icon" autocomplete="off" />
+                <label for="icon">Icon</label>
+            </p-floatlabel>
+        </div>
+        <div class="flex justify-end gap-2 mt-3">
+            <p-button label="Cancel" severity="secondary" (click)="onCloseModal.emit()" />
+            <p-button label="Save" (click)="executeSaveOnClick()" />
+        </div>
+    </p-dialog>
+</div>

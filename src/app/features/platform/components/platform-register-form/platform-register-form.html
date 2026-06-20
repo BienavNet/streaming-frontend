@@ -1,0 +1,27 @@
+<form>
+    <div class="card">
+        <!-- <p-panel header="Register Platform Form" class="w-xl h-3/5 flex p-8 text-xl"> -->
+        <p-dialog header="Register Form" [draggable]="false" [modal]="true" [visible]="true" styleClass="w-80" class=""
+            [closable]="false">
+            <div class="gap-2 flex items-center flex-col">
+                <p-floatlabel variant="in">
+                    <input pInputText id="name" [formField]="this.registerForm.name" autocomplete="off" />
+                    <label for="name">Name</label>
+                </p-floatlabel>
+                <p-floatlabel variant="in">
+                    <input pInputText id="link" [formField]="this.registerForm.link" autocomplete="off" />
+                    <label for="link">Link</label>
+                </p-floatlabel>
+                <p-floatlabel variant="in">
+                    <input pInputText id="icon" [formField]="this.registerForm.icon" autocomplete="off" />
+                    <label for="icon">Icon</label>
+                </p-floatlabel>
+            </div>
+            <div class="flex justify-end gap-2 mt-3">
+                <p-button label="Cancel" severity="secondary" (click)="this.onCloseModal.emit()" />
+                <p-button label="Save" (click)="this.savePlatform()" />
+            </div>
+        </p-dialog>
+        <!-- </p-panel> -->
+    </div>
+</form>

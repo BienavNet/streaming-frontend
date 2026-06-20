@@ -1,3 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
 
 @import 'tailwindcss';
+@import "primeicons/primeicons.css";
+
+:root {
+    --color-menu-background: #384959;
+    --color-content-background: #6a89a7;
+    --font-color-menu: #ffffff;
+}
