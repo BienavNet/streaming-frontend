@@ -11,12 +11,13 @@ import { AccountService } from '../../../../core/services/account/account.servic
 
 
 import { AccountRegisterForm } from '../account-register-form/account-register-form';
+import { AccountDetails } from '../account-details/account-details';
 import { AccountStatus } from '../../../../core/models/account.model';
 
 
 @Component({
   selector: 'app-account-table',
-  imports: [AccountRegisterForm, Panel, TableModule, ButtonModule, ConfirmDialogModule, TagModule],
+  imports: [AccountRegisterForm, AccountDetails, Panel, TableModule, ButtonModule, ConfirmDialogModule, TagModule],
   providers: [ConfirmationService],
   templateUrl: './account-table.html',
   styleUrl: './account-table.css',
@@ -31,6 +32,7 @@ export class AccountTable {
   errorMessage = signal<string | null>(null)
 
   isRegisterFormModalOpen = signal<boolean>(false)
+  accountDetailsId = signal<string | null>(null);
 
   isChangeStatusConfirmDialogOpen = signal<boolean>(false);
 
@@ -66,6 +68,14 @@ export class AccountTable {
 
   onClickDeactivateAccount(id: string) {
 
+  }
+
+  onClickAccountDetails(id: string) {
+    this.accountDetailsId.set(id);
+  }
+
+  onCloseAccountDetailsModal() {
+    this.accountDetailsId.set(null)
   }
 
   changeStatusOnClick(event: Event, id: string, currentStatus: AccountStatus) : void {

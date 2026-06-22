@@ -35,11 +35,11 @@ export interface AccountRegister {
 export interface AccountUpdate {
     email: string;
     password: string;
-    isFreeTrial: string;
     membershipBuyDate: Date;
     membershipExpireDate: Date;
     platform: string;
     payment: string;
+    isFreeTrial: string;
 }
 
 export enum AccountStatus {
