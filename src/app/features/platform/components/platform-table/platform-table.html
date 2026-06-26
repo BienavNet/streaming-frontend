@@ -27,7 +27,7 @@
                     <td>{{platform.link}}</td>
                     <td><img [src]="platform.icon" [alt]="platform.name" class="rounded-sm w-10 h-10 object-contain"></td>
                     <td>
-                        <div class="card flex justify-center flex-col gap-5">
+                        <div class="card flex flex-row items-center justify-center gap-2">
                             <p-button size="small"
                                 class="flex items-center justify-start gap-2 whitespace-nowrap w-full" label="Edit"
                                 icon="pi pi-pen-to-square" severity="info" (click)="openEditPlatformModal(platform)" />
