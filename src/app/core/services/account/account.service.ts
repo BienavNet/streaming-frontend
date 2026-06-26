@@ -60,7 +60,7 @@ export class AccountService {
                 )
     }
 
-    updateAccount(id: string, accountUpdate: AccountUpdate) : Observable<Account> {
+    updateAccount(id: string, accountUpdate: Partial<AccountUpdate>) : Observable<Account> {
         return this.http.put<ApiResponse<Account>>(`${this.apiUrl}/${id}`, accountUpdate)
                 .pipe(
                     map(response => response.data as Account),
