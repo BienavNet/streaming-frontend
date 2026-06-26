@@ -36,14 +36,11 @@
                     <td>
                         <div class="card flex flex-row items-center justify-center gap-2">
                             <p-button size="small" class="flex items-center justify-start gap-2 whitespace-nowrap"
-                                label="Info" icon="pi pi-id-card" severity="warn"
+                                label="Info" icon="pi pi-id-card" severity="info"
                                 (click)="this.onClickAccountDetails(account.id)" />
 
-                            <p-button size="small"
-                                class="flex items-center justify-start gap-2 whitespace-nowrap w-full" label="Edit"
-                                icon="pi pi-pen-to-square" severity="info" />
                             <p-button size="small" class="flex items-center justify-start gap-2 whitespace-nowrap"
-                                label="Delete" icon="pi pi-trash" severity="danger" />
+                                label="Delete" icon="pi pi-trash" severity="danger" (click)="this.onClickDeleteBtn($event, account.id)" />
 
                         </div>
                     </td>

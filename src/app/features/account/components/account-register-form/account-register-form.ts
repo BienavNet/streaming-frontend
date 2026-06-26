@@ -20,7 +20,6 @@ import { PaymentService } from '../../../../core/services/payment/payment.servic
 import { AccountRegister } from '../../../../core/models/account.model';
 import { AccountService } from '../../../../core/services/account/account.service';
 import { Payment, PaymentRegister } from '../../../../core/models/payment.model';
-import { formatNumber } from '@angular/common';
 
 @Component({
   selector: 'app-account-register-form',
@@ -108,7 +107,7 @@ export class AccountRegisterForm {
     this.addNewPaymentIsClicked.update(old => !old);
   }
 
-  onChangePlatformSelect(event: SelectChangeEvent) {
+  onChangePaymentSelect(event: SelectChangeEvent) {
     if (event.value === 'NEW_PAYMENT') {
       this.addNewPaymentIsClicked.set(true); // Muestra el sub-formulario
 

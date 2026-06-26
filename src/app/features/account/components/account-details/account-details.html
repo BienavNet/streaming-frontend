@@ -1,89 +1,159 @@
-<div class="card">
-    <p-dialog header="Account Details" [draggable]="false" [modal]="true" [visible]="true" styleClass="w-xl"
-        [closable]="true" [blockScroll]="true" [autofocus]="true" [contentStyle]="{'overflow': 'visible'}" (onHide)="this.onCloseModal.emit()">
+<p-dialog header="Account Details" [draggable]="false" [modal]="true" [visible]="true" styleClass="w-xl"
+    [closable]="true" [blockScroll]="true" [autofocus]="true" [contentStyle]="{'overflow': 'visible'}"
+    (onHide)="this.onCloseModal.emit()">
 
-        @if (this.isLoading()) {
-        <p><i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i> Cargando datos...</p>
-        }
-        @else if (this.errorMessage()) {
-        <p>{{ this.errorMessage() }}</p>
-        }
-        @else {
-        <span>Details</span>
-        <div class="card mx-10 my-3">
-            <div class="card gap-2 w-full flex flex-row items-center justify-between">
-                <p-iftalabel class="w-11/12 self-start">
-                    <input pInputText id="email" [value]="this.account()?.email" autocomplete="off" disabled
-                        class="w-full mb-1" />
-                    <label for="email">Email</label>
-                </p-iftalabel>
-                <p-button size="large" variant="outlined"><i class="pi pi-clone" pButtonIcon (click)="this.copyText(this.account()?.email)"></i></p-button>
+    <ng-template #header>
+        <div class="w-full flex justify-between items-center px-4">
+            <div>
+                <span class="font-bold text-2xl">Account Details</span>
             </div>
-            <div class="card gap-2 w-full flex flex-row items-center justify-between">
-                <p-iftalabel class="w-11/12 self-start">
-                    <input pInputText id="password" [value]="this.account()?.password" autocomplete="off" disabled
-                        class="w-full mb-1" />
-                    <label for="password">Password</label>
-                </p-iftalabel>
-                <p-button size="large" variant="outlined"><i class="pi pi-clone" pButtonIcon (click)="this.copyText(this.account()?.password)"></i></p-button>
-            </div>
-            <p-iftalabel>
-                <input pInputText id="membershipBuyDate" [value]="this.account()?.membershipBuyDate" autocomplete="off"
-                    disabled class="w-full mb-1" />
-                <label for="membershipBuyDate">Membership Buy Date</label>
-            </p-iftalabel>
-            <p-iftalabel>
-                <input pInputText id="membershipExpireDate" [value]="this.account()?.membershipExpireDate"
-                    autocomplete="off" disabled class="w-full mb-1" />
-                <label for="membershipExpireDate">Membership Expire Date</label>
-            </p-iftalabel>
-            <p-iftalabel>
-                <input pInputText id="freeTrial" [value]="this.account()?.freeTrial" autocomplete="off" disabled
-                    class="w-full mb-1" />
-                <label for="freeTrial">Free Trial</label>
-            </p-iftalabel>
-            <p-iftalabel>
-                <input pInputText id="registeredAt" [value]="this.account()?.registeredAt" autocomplete="off" disabled
-                    class="w-full mb-1" />
-                <label for="registeredAt">Registered At</label>
-            </p-iftalabel>
-
-        </div>
-
-        <!-- Mejorar la UI de las entidades-->
-        <span>Platform</span>
-        <div class="card gap-3 mx-10 my-3">
-            <p-iftalabel>
-                <input pInputText id="platform" [value]="this.account()?.platform?.name" autocomplete="off" disabled
-                    class="w-full mb-1" />
-                <label for="platform">Platform</label>
-            </p-iftalabel>
-            <div class="card gap-2 w-full flex flex-row items-center justify-between">
-                <p-iftalabel class="w-11/12 self-start">
-                    <input pInputText id="platformLink" [value]="this.account()?.platform?.link" autocomplete="off" disabled
-                        class="w-full mb-1" />
-                    <label for="platformLink">Link</label>
-                </p-iftalabel>
-                <p-button size="large" variant="outlined"><i class="pi pi-clone" pButtonIcon></i></p-button>
+            <div class="card flex justify-center">
+                <!-- <p-togglebutton onLabel="Editing" offLabel="Edit" offIcon="pi pi-pencil" [onIcon]="'pi pi-file-edit'" class="w-30" ariaLabel="Edit account" size="small" [(ngModule)]="this.isEditingButton" /> -->
+                <p-togglebutton [(ngModel)]="isEditingButton" onLabel="Cancel" offLabel="Edit" offIcon="pi pi-file-edit"
+                    [onIcon]="'pi pi-times-circle'" class="w-30" ariaLabel="Edit account" size="small"
+                    (onChange)="this.onChangeIsEditingButton()" />
             </div>
         </div>
-        <span>Payment</span>
-        <div class="card gap-3 mx-10 my-3">
-            <div class="card gap-2 w-full flex flex-row items-center justify-between">
-                <p-iftalabel class="w-11/12 self-start">
-                    <input pInputText id="payment" [value]="this.account()?.payment?.card" autocomplete="off" disabled
-                        class="w-full mb-1" />
-                    <label for="payment">Payment</label>
-                </p-iftalabel>
-                <p-button size="large" variant="outlined"><i class="pi pi-clone" pButtonIcon></i></p-button>
-            </div>
-            <p-iftalabel>
-                <input pInputText id="bankName" [value]="this.account()?.payment?.bankName" autocomplete="off" disabled
-                    class="w-full mb-1" />
-                <label for="bankName">Bank Name</label>
-            </p-iftalabel>
-        </div>
+    </ng-template>
 
-        }
-    </p-dialog>
-</div>
+    <span>Details</span>
+    <div class="card mx-10 my-3">
+        <div class="card gap-2 w-full flex flex-row items-center justify-between">
+            <p-iftalabel class="w-11/12 self-start">
+                <input pInputText id="email" [formField]="this.editForm.email" autocomplete="off" class="w-full mb-1" />
+                <label for="email">Email</label>
+            </p-iftalabel>
+            <p-button size="large" variant="outlined"><i class="pi pi-clone" pButtonIcon
+                    (click)="this.copyText(this.account()?.email)"></i></p-button>
+        </div>
+        <div class="card gap-2 w-full flex flex-row items-center justify-between">
+            <p-iftalabel class="w-11/12 self-start">
+                <input pInputText id="password" [formField]="this.editForm.password" autocomplete="off"
+                    class="w-full mb-1" />
+                <label for="password">Password</label>
+            </p-iftalabel>
+            <p-button size="large" variant="outlined"><i class="pi pi-clone" pButtonIcon
+                    (click)="this.copyText(this.account()?.password)"></i></p-button>
+        </div>
+        <p-iftalabel>
+            <p-date-picker id="membershipBuyDate" [formField]="$any(this.editForm.membershipBuyDate)" autocomplete="off"
+                class="w-full mb-1" dateFormat="yy-mm-dd" />
+            <label for="membershipBuyDate">Membership Buy Date</label>
+        </p-iftalabel>
+        <p-iftalabel>
+            <p-date-picker id="membershipExpireDate" [formField]="$any(this.editForm.membershipExpireDate)"
+                autocomplete="off" class="w-full mb-1" dateFormat="yy-mm-dd" />
+            <label for="membershipExpireDate">Membership Expire Date</label>
+        </p-iftalabel>
+        <p-iftalabel>
+            <p-select [options]="['yes', 'no']"
+                [formField]="$any(this.editForm.isFreeTrial)" optionLabel="FreeTrial"
+                class="w-full mb-1" appendTo="body">
+
+                <ng-template #selectedItem let-selectedOption>
+                    <div class="flex items-center gap-2">
+                        <div>{{ selectedOption }}</div>
+                    </div>
+                </ng-template>
+                <ng-template let-option #item>
+                    <div class="flex items-center gap-2">
+                        <div>{{ option }}</div>
+                    </div>
+                </ng-template>
+
+            </p-select>
+            <label for="freeTrial">Free Trial</label>
+
+        </p-iftalabel>
+        <p-iftalabel>
+            <input pInputText id="registeredAt" [value]="this.account()?.registeredAt" autocomplete="off" disabled
+                class="w-full mb-1" />
+            <label for="registeredAt">Registered At</label>
+        </p-iftalabel>
+
+    </div>
+
+    <!-- Mejorar la UI de las entidades-->
+
+    @if (!isEditingButton()) {
+    <span>Platform</span>
+    <div class="card gap-3 mx-10 my-3">
+        <p-iftalabel>
+            <input pInputText id="platform" [value]="this.account()?.platform?.name" autocomplete="off" disabled
+                class="w-full mb-1" />
+            <label for="platform">Platform</label>
+        </p-iftalabel>
+        <div class="card gap-2 w-full flex flex-row items-center justify-between">
+            <p-iftalabel class="w-11/12 self-start">
+                <input pInputText id="platformLink" [value]="this.account()?.platform?.link" autocomplete="off" disabled
+                    class="w-full mb-1" />
+                <label for="platformLink">Link</label>
+            </p-iftalabel>
+            <p-button size="large" variant="outlined"><i class="pi pi-clone" pButtonIcon></i></p-button>
+        </div>
+    </div>
+    <span>Payment</span>
+    <div class="card gap-3 mx-10 my-3">
+        <div class="card gap-2 w-full flex flex-row items-center justify-between">
+            <p-iftalabel class="w-11/12 self-start">
+                <input pInputText id="payment" [value]="this.account()?.payment?.card" autocomplete="off" disabled
+                    class="w-full mb-1" />
+                <label for="payment">Payment</label>
+            </p-iftalabel>
+            <p-button size="large" variant="outlined"><i class="pi pi-clone" pButtonIcon></i></p-button>
+        </div>
+        <p-iftalabel>
+            <input pInputText id="bankName" [value]="this.account()?.payment?.bankName" autocomplete="off" disabled
+                class="w-full mb-1" />
+            <label for="bankName">Bank Name</label>
+        </p-iftalabel>
+    </div>
+    }@else {
+    <span>Platform</span>
+    <div class="card gap-3 mx-10 my-3">
+        <p-floatlabel variant="on" class="w-full">
+            <p-select [formField]="$any(editForm.platform)" [options]="this.platforms()" optionValue="id"
+                inputId="platform" optionLabel="name" [filter]="true" filterBy="name" [showClear]="true" class="w-full"
+                appendTo="body">
+                <ng-template #selectedItem let-selectedOption>
+                    <div class="flex items-center gap-2">
+                        <div>{{ selectedOption.name }}</div>
+                    </div>
+                </ng-template>
+                <ng-template let-platform #item>
+                    <div class="flex items-center gap-2">
+                        <img [src]="platform.icon" style="width: 18px" />
+                        <div>{{ platform.name }}</div>
+                    </div>
+                </ng-template>
+            </p-select>
+            <label for="platform">Platform</label>
+        </p-floatlabel>
+    </div>
+    <span>Payment</span>
+    <div class="card gap-3 mx-10 my-3">
+        <p-floatlabel variant="on" class="w-full">
+            <p-select [formField]="$any(editForm.payment)" [options]="this.payments()" optionValue="id"
+                optionLabel="card" [filter]="true" filterBy="card" [showClear]="true" inputId="payment" class="w-full"
+                appendTo="body">
+                <ng-template #selectedItem let-selectedOption>
+                    <div class="flex items-center gap-2">
+                        <div>{{ selectedOption.card }}</div>
+                    </div>
+                </ng-template>
+                <ng-template let-payment #item>
+                    <div class="flex items-center gap-2">
+                        <div>{{ payment.card }}</div>
+                    </div>
+                </ng-template>
+            </p-select>
+            <label for="payment">Payment</label>
+        </p-floatlabel>
+    </div>
+
+    <div class="card gap-3 mx-10 my-3 flex justify-end">
+        <p-button label="Save" (onClick)="this.onClickSaveButton()" />
+    </div>
+    }
+    
+</p-dialog>

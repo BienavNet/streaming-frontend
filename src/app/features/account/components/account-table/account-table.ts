@@ -13,6 +13,7 @@ import { AccountService } from '../../../../core/services/account/account.servic
 import { AccountRegisterForm } from '../account-register-form/account-register-form';
 import { AccountDetails } from '../account-details/account-details';
 import { AccountStatus } from '../../../../core/models/account.model';
+import { ApiError } from '../../../../core/models/apiResponse';
 
 
 @Component({
@@ -81,7 +82,7 @@ export class AccountTable {
   changeStatusOnClick(event: Event, id: string, currentStatus: AccountStatus) : void {
     this.confirmationService.confirm({
       target: event.target as EventTarget,
-      message: 'Do you want to change the status of this platform?',
+      message: 'Do you want to change the status of this account?',
       header: 'Modify Confirmation',
       icon: 'pi pi-info-circle',
       rejectLabel: 'Cancel',
@@ -121,5 +122,45 @@ export class AccountTable {
       }
 
     });
+  }
+
+  onClickDeleteBtn(event: Event, id: string) {
+    this.confirmationService.confirm({
+      target: event.target as EventTarget, 
+      message: 'Do you want really to delete this account?',
+      header: 'Delete Confirmation',
+      icon: 'pi pi-info-circle',
+      rejectLabel: 'Cancel',
+      rejectButtonProps: {
+          label: 'Cancel',
+          severity: 'secondary',
+          outlined: true
+      },
+      acceptButtonProps: {
+          label: 'Delete',
+          severity: 'danger'
+      },
+      accept: () => {
+
+        this.accountService.deleteAccount(id).subscribe({
+          next: () => {
+            this.messageService.add({
+              closable: true,
+              summary: 'OK - Account Deleted',
+              severity: "success",
+              detail: "This status has been deleted successfully."
+            })
+          },
+          error: (err: ApiError) => {
+            this.messageService.add({
+              closable: true,
+              summary: `${err.code} Error`,
+              severity: "error",
+              detail: err.message
+            })
+          }
+        });
+      }
+    })
   }
 }
