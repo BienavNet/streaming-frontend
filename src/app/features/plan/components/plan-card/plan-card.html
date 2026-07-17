@@ -1,0 +1,12 @@
+<p-card [header]="this.planInput().plan" class="w-full mb-2">
+    <p-confirmdialog />
+    <div class="gap-2 flex flex-col justify-center">
+        <div>
+            <!-- <span class="block">Plan: {{this.planInput().plan}}</span> -->
+            <span class="block">Profiles Quantity: {{this.planInput().profiles}}</span>
+        </div>
+    </div>
+    <ng-template #footer class="flex justify-end gap-4 mt-1" >
+        <p-button size="small" class="flex items-center justify-start gap-2 whitespace-nowrap self-end" label="Delete" severity="danger" [outlined]="true" (click)="this.onClickDeleteBtn($event)" />
+    </ng-template>
+</p-card>

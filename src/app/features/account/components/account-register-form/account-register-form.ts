@@ -64,9 +64,6 @@ export class AccountRegisterForm {
 
   registerFormModel = signal<AccountRegister>({
     email: '',
-    isFreeTrial: false,
-    membershipBuyDate: '',
-    membershipExpireDate: '',
     password: '',
     payment: '',
     platform: ''
@@ -75,8 +72,6 @@ export class AccountRegisterForm {
   registerForm = form(this.registerFormModel, (schemaPath) => {
     required(schemaPath.email),
       email(schemaPath.email),
-      required(schemaPath.membershipBuyDate),
-      required(schemaPath.membershipExpireDate),
       required(schemaPath.password),
       required(schemaPath.platform)
   })
@@ -120,6 +115,24 @@ export class AccountRegisterForm {
   }
 
   saveAccountOnClick(): void {
+    if (!this.registerForm().valid()){
+      var errors = this._getFormErrorMessage()
+      errors.map(error => {
+
+        if (!error || error === "")
+          return
+
+        this.messageService.add({
+        closable: true,
+        summary: "Form Error",
+        severity: "error",
+        detail: error
+      })
+      })
+      
+      return
+    }
+
     if (this.addNewPaymentIsClicked()) {
       this.paymentService.createPayment(this.paymentRegisterFormModel()).subscribe({
         next: (payment) => {
@@ -167,5 +180,16 @@ export class AccountRegisterForm {
         })
       },
     })
+  }
+
+  private _getFormErrorMessage(): string[] {
+
+    const form = this.registerForm;
+
+    const message = (Object.keys(form) as Array<keyof AccountRegister>).map(key => (
+      form[key]().invalid() ? `${key} - ${form[key]().errorSummary().map( error => (error.kind))}` : ""
+    ))
+
+    return message;
   }
 }

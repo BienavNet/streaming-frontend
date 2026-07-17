@@ -12,7 +12,7 @@
                     <input pInputText id="password" [formField]="this.registerForm.password" autocomplete="off" class="w-full" />
                     <label for="password">Password</label>
                 </p-floatlabel>
-                <div class="card w-full flex justify-around items-center flex-row gap-2">
+                <!-- <div class="card w-full flex justify-around items-center flex-row gap-2">
                     <p-floatlabel variant="on" class="w-1/2">
                         <p-datepicker 
                             inputId="membershipBuyDate" 
@@ -39,7 +39,7 @@
                         />
                         <label for="membershipExpireDate">Ends At</label>
                     </p-floatlabel>
-                </div>
+                </div> -->
                 <div class="card w-full flex justify-around items-center flex-row gap-2">
                     <p-floatlabel variant="on" class="w-full">
                         <p-select 
@@ -157,10 +157,10 @@
                 </div>
                 }
 
-                <div class="card w-full flex justify-end items-center flex-row gap-2">
+                <!-- <div class="card w-full flex justify-end items-center flex-row gap-2">
                     <label for="freeTrial">Is free trial?</label>
                     <p-checkbox [binary]="true" inputId="freeTrial" [formField]="this.registerForm.isFreeTrial" />
-                </div>
+                </div> -->
             </div>
             <div class="flex justify-end gap-2 mt-3">
                 <p-button label="Cancel" severity="secondary" (click)="this.onCloseModal.emit()" />

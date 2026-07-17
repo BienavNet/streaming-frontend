@@ -16,8 +16,8 @@
         </div>
     </ng-template>
 
-    <span>Details</span>
     <div class="card mx-10 my-3">
+        <span class="block mb-1 font-semibold">Details</span>
         <div class="card gap-2 w-full flex flex-row items-center justify-between">
             <p-iftalabel class="w-11/12 self-start">
                 <input pInputText id="email" [formField]="this.editForm.email" autocomplete="off" class="w-full mb-1" />
@@ -36,36 +36,6 @@
                     (click)="this.copyText(this.account()?.password)"></i></p-button>
         </div>
         <p-iftalabel>
-            <p-date-picker id="membershipBuyDate" [formField]="$any(this.editForm.membershipBuyDate)" autocomplete="off"
-                class="w-full mb-1" dateFormat="yy-mm-dd" />
-            <label for="membershipBuyDate">Membership Buy Date</label>
-        </p-iftalabel>
-        <p-iftalabel>
-            <p-date-picker id="membershipExpireDate" [formField]="$any(this.editForm.membershipExpireDate)"
-                autocomplete="off" class="w-full mb-1" dateFormat="yy-mm-dd" />
-            <label for="membershipExpireDate">Membership Expire Date</label>
-        </p-iftalabel>
-        <p-iftalabel>
-            <p-select [options]="['yes', 'no']"
-                [formField]="$any(this.editForm.isFreeTrial)" optionLabel="FreeTrial"
-                class="w-full mb-1" appendTo="body">
-
-                <ng-template #selectedItem let-selectedOption>
-                    <div class="flex items-center gap-2">
-                        <div>{{ selectedOption }}</div>
-                    </div>
-                </ng-template>
-                <ng-template let-option #item>
-                    <div class="flex items-center gap-2">
-                        <div>{{ option }}</div>
-                    </div>
-                </ng-template>
-
-            </p-select>
-            <label for="freeTrial">Free Trial</label>
-
-        </p-iftalabel>
-        <p-iftalabel>
             <input pInputText id="registeredAt" [value]="this.account()?.registeredAt" autocomplete="off" disabled
                 class="w-full mb-1" />
             <label for="registeredAt">Registered At</label>
@@ -76,8 +46,8 @@
     <!-- Mejorar la UI de las entidades-->
 
     @if (!isEditingButton()) {
-    <span>Platform</span>
     <div class="card gap-3 mx-10 my-3">
+        <span class="block mb-1 font-semibold">Platform</span>
         <p-iftalabel>
             <input pInputText id="platform" [value]="this.account()?.platform?.name" autocomplete="off" disabled
                 class="w-full mb-1" />
@@ -92,8 +62,8 @@
             <p-button size="large" variant="outlined"><i class="pi pi-clone" pButtonIcon></i></p-button>
         </div>
     </div>
-    <span>Payment</span>
     <div class="card gap-3 mx-10 my-3">
+        <span class="block mb-1 font-semibold">Payment</span>
         <div class="card gap-2 w-full flex flex-row items-center justify-between">
             <p-iftalabel class="w-11/12 self-start">
                 <input pInputText id="payment" [value]="this.account()?.payment?.card" autocomplete="off" disabled
@@ -152,8 +122,8 @@
     </div>
 
     <div class="card gap-3 mx-10 my-3 flex justify-end">
-        <p-button label="Save" (onClick)="this.onClickSaveButton()" />
+        <p-button label="Save" (onClick)="this.onClickSaveButton()" [disabled]="!this.saveEditBtnDisabled()" />
     </div>
     }
-    
+
 </p-dialog>

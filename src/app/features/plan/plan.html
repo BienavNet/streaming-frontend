@@ -1,0 +1,30 @@
+<p-panel>
+    <p-dialog [closable]="true" [closeOnEscape]="true" [modal]="true" [visible]="true" [draggable]="false" [style]="{ width: '25rem' }" (onHide)="this.onCloseModal()">
+        <ng-template #header>
+            <div class="w-full flex justify-between items-center px-4">
+                <div>
+                    <span class="font-bold text-3xl">Plans</span>
+                </div>
+                <p-button size="small" class="flex items-center justify-start gap-2 whitespace-nowrap"
+                    [label]="this.isRegisterFormActive() ? 'Cancel' : 'New Plan'"
+                    [icon]="this.isRegisterFormActive() ? 'pi pi-times-circle' : 'pi pi-plus'" severity="secondary"
+                    (click)="this.onClickRegisterFormButton()" />
+            </div>
+        </ng-template>
+
+        @if (this.isRegisterFormActive()) {
+            <app-register-plan-form [platformId]="this.platformId()" (closeForm)="this.onCloseModal()" />
+        } @else {
+            @if (this.plans().length == 0) {
+                <span>No plans to show...</span>
+            }@else {
+                <div class="gap-2">
+                    @for (plan of this.plans(); track plan.id) {
+                        <app-plan-card [planInput]="plan" (onClose)="this.onCloseModal()" />
+                    }
+                </div>
+            }
+        }
+
+    </p-dialog>
+</p-panel>

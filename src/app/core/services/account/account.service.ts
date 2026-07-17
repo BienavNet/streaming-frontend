@@ -40,7 +40,6 @@ export class AccountService {
                                 {
                                     id: data.id,
                                     email: data.email,
-                                    membershipExpireDate: data.membershipExpireDate,
                                     platformName: data.platform.name,
                                     status: data.status
                                 }
@@ -68,7 +67,6 @@ export class AccountService {
                         const dataUpdated: AccountDetails = {
                             id: data.id,
                             email: data.email,
-                            membershipExpireDate: data.membershipExpireDate,
                             platformName: data.platform.name,
                             status: data.status
                         }

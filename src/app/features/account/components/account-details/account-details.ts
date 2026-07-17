@@ -35,6 +35,8 @@ export class AccountDetails implements OnInit {
   private platformService = inject(PlatformService);
   private paymentService = inject(PaymentService);
 
+  formUpdateHasChanged = signal<boolean>(true)
+
 
   account = signal<Account | null>(null);
   isLoading = signal<boolean>(false)
@@ -47,9 +49,6 @@ export class AccountDetails implements OnInit {
   // Form Definition
   private formModel = signal<AccountUpdate>({
     email: "",
-    isFreeTrial: "",
-    membershipBuyDate: new Date(),
-    membershipExpireDate: new Date(),
     password: "",
     payment: "",
     platform: ""
@@ -60,13 +59,12 @@ export class AccountDetails implements OnInit {
     disabled(schemaPath, { when: () => !this.isEditingButton() });
     required(schemaPath.email);
     email(schemaPath.email);
-    required(schemaPath.isFreeTrial);
-    required(schemaPath.membershipBuyDate);
-    required(schemaPath.membershipExpireDate);
     required(schemaPath.password);
     required(schemaPath.payment);
     required(schemaPath.platform);
   })
+
+  saveEditBtnDisabled = computed<boolean>(() => this.editForm().dirty() && this.editForm().valid())
 
 
   //Data bydefault
@@ -115,7 +113,7 @@ export class AccountDetails implements OnInit {
 
     (Object.keys(currentForm) as Array<keyof AccountUpdate>).forEach(key => {
       const field = this.editForm[key];
-      if(field().dirty && field().dirty() && currentForm[key] === originalMapped[key])
+      if(field && field().dirty && field().dirty() && currentForm[key] === originalMapped[key])
         this.editForm[key]().reset();
     })
 
@@ -165,14 +163,15 @@ export class AccountDetails implements OnInit {
 
   onClickSaveButton() {
     const partialUpdate: Partial<AccountUpdate> = {};
-
+    
     (Object.keys(this.formModel()) as Array<keyof AccountUpdate>).forEach(key => {
 
       const fieldState = this.editForm[key];
 
-      if(fieldState() && fieldState().dirty())
+      if(fieldState && fieldState() && fieldState().dirty())
         (partialUpdate as any)[key] = this.formModel()[key];
     })
+
 
     if (Object.keys(partialUpdate).length === 0)
       return

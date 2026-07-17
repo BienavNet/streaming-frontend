@@ -6,7 +6,7 @@
                 <div>
                     <span class="font-bold text-3xl">Accounts</span>
                 </div>
-                <p-button size="small" class="flex items-center justify-start gap-2 whitespace-nowrap" label="Add New"
+                <p-button size="small" class="flex items-center justify-start gap-2 whitespace-nowrap" label="Add Account"
                     icon="pi pi-plus" severity="secondary" (click)="this.onRegisterFormModalClick()" />
             </div>
         </ng-template>
@@ -15,7 +15,6 @@
                 <tr>
                     <th>ID</th>
                     <th>Email</th>
-                    <th>Expire At</th>
                     <th>Platform</th>
                     <th>Status</th>
                     <th>Actions</th>
@@ -23,9 +22,8 @@
             </ng-template>
             <ng-template #body let-account class="text-sm">
                 <tr>
-                    <td>{{account.id}}</td>
+                    <td class="w-1/12">{{account.id}}</td>
                     <td>{{account.email}}</td>
-                    <td>{{account.membershipExpireDate}}</td>
                     <td>{{account.platformName}}</td>
                     <td>
                         <p-button variant="text" [severity]="getSeverity(account.status)"
@@ -34,7 +32,7 @@
                         </p-button>
                     </td>
                     <td>
-                        <div class="card flex flex-row items-center justify-center gap-2">
+                        <div class="card flex flex-row items-center justify-center gap-1">
                             <p-button size="small" class="flex items-center justify-start gap-2 whitespace-nowrap"
                                 label="Info" icon="pi pi-id-card" severity="info"
                                 (click)="this.onClickAccountDetails(account.id)" />

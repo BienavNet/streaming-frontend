@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, signal, Signal } from '@angular/core';
 import { Panel } from 'primeng/panel';
-import { Platform, PlatformUpdate } from '../../../../core/models/platform.model';
+import { Platform } from '../../../../core/models/platform.model';
 import { TableModule } from 'primeng/table';
 import { SkeletonModule } from 'primeng/skeleton';
 import { PlatformService } from '../../../../core/services/platform/platform.service';
@@ -12,9 +12,11 @@ import { MessageService, ConfirmationService } from 'primeng/api';
 import { EditPlatformModalComponent} from '../edit-platform-modal/edit-platform-modal';
 import { PlatformRegisterForm } from '../platform-register-form/platform-register-form';
 
+import { PlanComponent } from '../../../plan/plan';
+
 @Component({
   selector: 'app-platform-table',
-  imports: [EditPlatformModalComponent, PlatformRegisterForm, Panel, TableModule, SkeletonModule, ButtonModule, ToastModule, ConfirmDialogModule],
+  imports: [EditPlatformModalComponent, PlatformRegisterForm, PlanComponent, Panel, TableModule, SkeletonModule, ButtonModule, ToastModule, ConfirmDialogModule],
   providers: [ConfirmationService],
   templateUrl: './platform-table.html',
   styleUrl: './platform-table.css',
@@ -24,6 +26,8 @@ export class PlatformTable implements OnInit {
   private messageService = inject(MessageService);
   private confirmationService = inject(ConfirmationService);
   // showToast: boolean = false;
+
+  platformSelectedId = signal<string|null>(null)
 
 
   platformService = inject(PlatformService);
@@ -118,6 +122,14 @@ export class PlatformTable implements OnInit {
 
   onClickOpenRegisterForm(): void {
     this.isOpenedRegisterForm.update(value => !value)
+  }
+
+  onClickViewPlans(id: string): void {
+    this.platformSelectedId.set(id);
+  }
+
+  closeViewPlansModal(): void {
+    this.platformSelectedId.set(null);
   }
 
 

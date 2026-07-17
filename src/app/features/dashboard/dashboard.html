@@ -11,24 +11,35 @@
         <div class="w-full flex flex-col justify-center items-start gap-0.5 menu">
             <span class="titleSeparator mx-4 mt-10 mb-2">DASHBOARD</span>
             <p-button icon="pi pi-home" label="Home" variant="text" class="w-full flex justify-start"
-                [styleClass]="currentActiveTab() === 'home' ? 'w-full active-tab' : 'w-full'" severity="secondary" (click)="setCurrentTab('home')" />
+                [styleClass]="currentActiveTab() === 'home' ? 'w-full active-tab' : 'w-full'" severity="secondary"
+                (click)="setCurrentTab('home')" />
             <span class="titleSeparator mx-4 mt-10 mb-2">MANAGEMENT</span>
-            <p-button icon="pi pi-folder-open" label="Platforms" variant="text" class="w-full" [styleClass]="currentActiveTab() === 'platforms' ? 'w-full active-tab' : 'w-full'"
-                severity="secondary" (click)="setCurrentTab('platforms')" />
-            <p-button icon="pi pi-users" label="Accounts" variant="text" class="w-full" [styleClass]="currentActiveTab() === 'accounts' ? 'w-full active-tab' : 'w-full'"
-                severity="secondary" (click)="setCurrentTab('accounts')" />
-            <p-button icon="pi pi-receipt" label="Orders" variant="text" class="w-full" [styleClass]="currentActiveTab() === 'orders' ? 'w-full active-tab' : 'w-full'"
-                severity="secondary" (click)="setCurrentTab('orders')" />
-            <p-button icon="pi pi-credit-card" label="Payments" variant="text" class="w-full" [styleClass]="currentActiveTab() === 'payments' ? 'w-full active-tab' : 'w-full'"
-                severity="secondary" (click)="setCurrentTab('payments')" />
+            <p-button icon="pi pi-folder-open" label="Platforms" variant="text" class="w-full"
+                [styleClass]="currentActiveTab() === 'platforms' ? 'w-full active-tab' : 'w-full'" severity="secondary"
+                (click)="setCurrentTab('platforms')" />
+            <p-button icon="pi pi-users" label="Accounts" variant="text" class="w-full"
+                [styleClass]="currentActiveTab() === 'accounts' ? 'w-full active-tab' : 'w-full'" severity="secondary"
+                (click)="setCurrentTab('accounts')" />
+            <p-button icon="pi pi-receipt" label="Orders" variant="text" class="w-full"
+                [styleClass]="currentActiveTab() === 'orders' ? 'w-full active-tab' : 'w-full'" severity="secondary"
+                (click)="setCurrentTab('orders')" />
+            <p-button icon="pi pi-credit-card" label="Payments" variant="text" class="w-full"
+                [styleClass]="currentActiveTab() === 'payments' ? 'w-full active-tab' : 'w-full'" severity="secondary"
+                (click)="setCurrentTab('payments')" />
+            <p-button icon="pi pi-credit-card" label="Memberships" variant="text" class="w-full"
+                [styleClass]="currentActiveTab() === 'memberships' ? 'w-full active-tab' : 'w-full'" severity="secondary"
+                (click)="setCurrentTab('memberships')" />
             <span class="titleSeparator mx-4 mt-10 mb-2">AUTOMATIZATION</span>
-            <p-button label="Comming soon" variant="text" class="w-full" [styleClass]="currentActiveTab() === 'comming' ? 'w-full active-tab' : 'w-full'" severity="secondary" (click)="setCurrentTab('comming soon')" />
+            <p-button label="Comming soon" variant="text" class="w-full"
+                [styleClass]="currentActiveTab() === 'comming' ? 'w-full active-tab' : 'w-full'" severity="secondary"
+                (click)="setCurrentTab('comming soon')" />
         </div>
 
     </div>
     }
     <div class="w-full h-full">
-        <div class="admin-bar w-full h-1/12 flex justify-between items-center" [class]="isLateralMenuOpen() ? 'active' : ''" >
+        <div class="admin-bar w-full h-1/12 flex justify-between items-center"
+            [class]="isLateralMenuOpen() ? 'active' : ''">
             <div class="lateral-icon ml-5" (click)="changeStateLateralMenu()">
                 <i class="pi pi-bars" style="font-size: 1.2rem;"></i>
             </div>
@@ -38,15 +49,18 @@
         </div>
         <div class="content w-full h-11/12">
             @switch (this.currentActiveTab()) {
-                @case ("platforms") {
-                    <app-platform />
-                }
-                @case ("accounts") {
-                    <app-account />
-                }
-                @default {
-                    <span>Esta parte esta en construccion.</span>
-                }
+            @case ("platforms") {
+            <app-platform />
+            }
+            @case ("accounts") {
+            <app-account />
+            }
+            @case ("orders") {
+                <app-order />
+            }
+            @default {
+            <span>Esta parte esta en construccion.</span>
+            }
             }
         </div>
     </div>
