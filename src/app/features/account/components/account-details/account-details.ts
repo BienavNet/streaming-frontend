@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, input, model, OnInit, output, signal } from '@angular/core';
+import { Component, computed, effect, inject, input, OnInit, output, signal } from '@angular/core';
 
 import { PanelModule } from 'primeng/panel';
 import { IftaLabelModule } from 'primeng/iftalabel';
@@ -7,7 +7,7 @@ import { DialogModule } from "primeng/dialog";
 import { ButtonModule } from 'primeng/button';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { FormsModule } from '@angular/forms';
-import { email, form, required, schema, FormField, disabled } from '@angular/forms/signals';
+import { email, form, required, FormField, disabled } from '@angular/forms/signals';
 
 import { MessageService } from 'primeng/api';
 import { AccountService } from '../../../../core/services/account/account.service';
@@ -74,9 +74,9 @@ export class AccountDetails implements OnInit {
   private _mapAccountToNewAccountUpdate(account: Account) {
     return {
       email: account.email,
-      isFreeTrial: account.freeTrial ? 'yes' : 'no',
-      membershipBuyDate: account.membershipBuyDate,
-      membershipExpireDate: account.membershipExpireDate,
+      // isFreeTrial: account.freeTrial ? 'yes' : 'no',
+      // membershipBuyDate: account.membershipBuyDate,
+      // membershipExpireDate: account.membershipExpireDate,
       password: account.password,
       payment: account.payment.id,
       platform: account.platform.id

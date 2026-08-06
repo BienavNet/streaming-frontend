@@ -1,0 +1,49 @@
+<div class="w-full h-full card flex justify-center items-center">
+    <!-- <p-confirmdialog /> -->    
+    <p-panel class="w-5/6 h-11/12 flex p-8 text-xl">
+        <ng-template #header>
+            <div class="w-full flex justify-between items-center px-4">
+                <div>
+                    <span class="font-bold text-3xl">Orders</span>
+                </div>
+                <p-button size="small" class="flex items-center justify-start gap-2 whitespace-nowrap" label="Add Order"
+                    icon="pi pi-plus" severity="secondary" (click)="this.onClickNewBtn()" />
+            </div>
+        </ng-template>
+        <p-table [value]="this.orders()" class="w-full" [loading]="this.isLoading()" [scrollable]="true">
+            <ng-template #header>
+                <tr>
+                    <th>ID</th>
+                    <th>Email</th>
+                    <th>Platform</th>
+                    <th>Buy At</th>
+                    <th>Type</th>
+                    <th>Actions</th>
+                </tr>
+            </ng-template>
+            <ng-template #body let-order class="text-sm">
+                <tr>
+                    <td class="w-1/12">{{order.id}}</td>
+                    <td>{{order.accountEmail}}</td>
+                    <td>{{order.platformName}}</td>
+                    <td>{{order.buyDate}}</td>
+                    <td>{{order.orderType}}</td>
+                    <td>
+                        <div class="card flex flex-row items-center justify-center gap-1">
+                            <p-button size="small" class="flex items-center justify-start gap-2 whitespace-nowrap"
+                                label="Show Info" icon="pi pi-id-card" severity="info" />
+
+                        </div>
+                    </td>
+                </tr>
+
+
+            </ng-template>
+        </p-table>
+    </p-panel>
+
+    @if (this.isAddNewClicked()) {
+        <app-order-register-form (onCloseModal)="this.onClickNewBtn()" />
+    }
+
+</div>

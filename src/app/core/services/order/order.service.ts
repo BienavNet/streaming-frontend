@@ -2,7 +2,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { inject, Service, signal } from '@angular/core';
 import { environment } from '../../../../environments/environment.development';
 import { ApiError, ApiResponse, defaultApiError } from '../../models/apiResponse';
-import { OrderDetails } from '../../models/order.model';
+import { OrderDetails, OrderRegister } from '../../models/order.model';
 import { catchError, map, Observable, tap, throwError } from 'rxjs';
 
 
@@ -28,6 +28,14 @@ export class OrderService {
                 .pipe(
                     map(response => response.data as OrderDetails[]),
                     tap(data => this._orders.set(data)),
+                    catchError(this.defineCatchError)
+                )
+    }
+
+    saveOrder(order: OrderRegister) : Observable<string> {
+        return this.http.post<ApiResponse<string>>(this.apiUrl, order)
+                .pipe(
+                    map(res => res.data as string),
                     catchError(this.defineCatchError)
                 )
     }

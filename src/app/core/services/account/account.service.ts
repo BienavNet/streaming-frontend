@@ -20,8 +20,8 @@ export class AccountService {
         return throwError(() => apiError);
     })
 
-    loadAccounts() : Observable<AccountDetails[]> {
-        return this.http.get<ApiResponse<AccountDetails[]>>(`${this.apiUrl}/details`)
+    loadAccounts(page: number = 0, offset: number = 0) : Observable<AccountDetails[]> {
+        return this.http.get<ApiResponse<AccountDetails[]>>(`${this.apiUrl}/details/${page}/${offset}`)
                 .pipe(
                     map(response => response.data as AccountDetails[]),
                     tap(data => this._accounts.set(data)),

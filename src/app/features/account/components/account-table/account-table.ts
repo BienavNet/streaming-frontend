@@ -14,12 +14,13 @@ import { AccountRegisterForm } from '../account-register-form/account-register-f
 import { AccountDetails } from '../account-details/account-details';
 import { AccountStatus } from '../../../../core/models/account.model';
 import { ApiError } from '../../../../core/models/apiResponse';
-
+import { MembershipComponent } from '../../../membership/membership.component';
+import { MembershipContextService } from '../../../../core/context/membership-context-flow/membership-context-service';
 
 @Component({
   selector: 'app-account-table',
-  imports: [AccountRegisterForm, AccountDetails, Panel, TableModule, ButtonModule, ConfirmDialogModule, TagModule],
-  providers: [ConfirmationService],
+  imports: [AccountRegisterForm, AccountDetails, MembershipComponent, Panel, TableModule, ButtonModule, ConfirmDialogModule, TagModule],
+  providers: [ConfirmationService, MembershipContextService],
   templateUrl: './account-table.html',
   styleUrl: './account-table.css',
 }) 
@@ -28,12 +29,17 @@ export class AccountTable {
   private confirmationService = inject(ConfirmationService);
   private messageService = inject(MessageService);
 
+  private membershipContextService = inject(MembershipContextService);
+
+
   accountService = inject(AccountService);
   isLoading = signal<boolean>(false)
   errorMessage = signal<string | null>(null)
 
   isRegisterFormModalOpen = signal<boolean>(false)
   accountDetailsId = signal<string | null>(null);
+
+  membershipIdToQuery = signal<string | undefined>(undefined);
 
   isChangeStatusConfirmDialogOpen = signal<boolean>(false);
 
@@ -55,20 +61,13 @@ export class AccountTable {
     })
   }
 
-  getSeverity(status: string) {
-    switch(status) {
-      case("DEACTIVE"): return "danger";
-      case("ACTIVE"): return "success";
-      default: return "success";
-    }
-  }
-
   onRegisterFormModalClick() : void {
     this.isRegisterFormModalOpen.update(old => !old)
   }
 
-  onClickDeactivateAccount(id: string) {
-
+  onMembershipModalClick(id: string | undefined = undefined) : void {
+    this.membershipIdToQuery.set(id);
+    this.membershipContextService.setSelectedAccount(id!);
   }
 
   onClickAccountDetails(id: string) {
@@ -77,51 +76,6 @@ export class AccountTable {
 
   onCloseAccountDetailsModal() {
     this.accountDetailsId.set(null)
-  }
-
-  changeStatusOnClick(event: Event, id: string, currentStatus: AccountStatus) : void {
-    this.confirmationService.confirm({
-      target: event.target as EventTarget,
-      message: 'Do you want to change the status of this account?',
-      header: 'Modify Confirmation',
-      icon: 'pi pi-info-circle',
-      rejectLabel: 'Cancel',
-      rejectButtonProps: {
-          label: 'Cancel',
-          severity: 'secondary',
-          outlined: true
-      },
-      acceptButtonProps: {
-          label: 'Modify',
-          severity: 'danger'
-      },
-
-      accept: () => {
-        
-        /* Se debe de crear el endpoint y el servicio para volver a activar la cuenta o se puede modificar el endpoint actual solo para que intercambie los estados correspondientes */
-        const action = currentStatus === AccountStatus.ACTIVE ? this.accountService.deactivateAccount(id) : this.accountService.deactivateAccount(id);
-
-        action.subscribe({
-          next: () => {
-            this.messageService.add({
-              closable: true,
-              summary: 'OK - Status Modified Successfully',
-              severity: "success",
-              detail: "This status has been changed successfully."
-            })
-          },
-          error: (err: Error) => {
-            this.messageService.add({
-              closable: true,
-              summary: `Error - ${err.cause}`,
-              severity: "error",
-              detail: err.message
-            })
-          }
-        });
-      }
-
-    });
   }
 
   onClickDeleteBtn(event: Event, id: string) {

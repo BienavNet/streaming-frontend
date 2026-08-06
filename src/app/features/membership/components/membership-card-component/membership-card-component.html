@@ -1,0 +1,17 @@
+<p-card header="Membership" class="w-full mb-2">
+    <div class="gap-2 flex flex-row justify-around">
+        <div class="flex-col">
+            <span class="block">Plan: {{this.membership().details.plan}}</span>
+            <span class="block">Profiles Quantity: {{this.membership().details.profiles}}</span>
+            <span class="block">Free Trial: {{this.membership().isFreeTrial ? "yes" : "no"}}</span>
+            <span class="block">Buy At: {{this.membership().membershipBuyDate}}</span>
+            <span class="block">Ends At: {{this.membership().membershipExpireDate}}</span>
+        </div>
+        <div class="flex-col gap-20">
+            <p-button size="small" class="flex items-center justify-start gap-2 whitespace-nowrap my-2" label="Update"
+                icon="pi pi-id-card" severity="info" />
+            <!-- <p-button size="small" class="flex items-center justify-start gap-2 whitespace-nowrap" label="Delete"
+                icon="pi pi-id-card" severity="danger" /> -->
+        </div>
+    </div>
+</p-card>

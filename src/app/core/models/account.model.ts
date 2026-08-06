@@ -5,13 +5,10 @@ export interface Account {
     id: string;
     email: string;
     password: string;
-    membershipBuyDate: Date;
-    membershipExpireDate: Date;
     registeredAt: Date;
     platform: Platform;
     payment: Payment;
     status: string;
-    freeTrial: boolean;
 } 
 
 export interface AccountDetails {

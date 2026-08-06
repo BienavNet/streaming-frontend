@@ -21,5 +21,15 @@ export interface OrderDetails {
 }
 
 export interface OrderRegister {
-    
+    account: string;
+    profileAmount: number;
+    buyDate: Date;
+    finishDate: Date;
+    paymentAmount: number;
+    orderType: string;
 }
+
+export const ORDER_TYPES = [
+    {name: "FULL"},
+    {name: "PROFILE"}
+]

@@ -1,0 +1,49 @@
+<form>
+    <div class="card">
+        <div class="gap-3 flex items-center flex-col mt-2">
+            <p-floatlabel variant="on" class="w-full">
+                <input pInputText id="account" autocomplete="off" class="w-full"
+                    [formField]="this.registerForm.account" />
+                <label for="account">Account</label>
+            </p-floatlabel>
+            <p-floatlabel variant="on" class="w-full">
+                <p-select [options]="this.plans()" optionValue="id" inputId="plan" optionLabel="name" [filter]="true"
+                    filterBy="plan" [showClear]="true" class="w-full" appendTo="body"
+                    [formField]="$any(this.registerForm.membershipConfig)">
+                    <ng-template #selectedItem let-selectedOption>
+                        <div class="flex items-center gap-2">
+                            <div>{{ selectedOption.plan }} - {{ selectedOption.profiles }}</div>
+                        </div>
+                    </ng-template>
+                    <ng-template let-plan #item>
+                        <div class="flex items-center gap-2">
+                            <div>{{ plan.plan }} - {{ plan.profiles }}</div>
+                        </div>
+                    </ng-template>
+                </p-select>
+                <label for="plan">Plans</label>
+            </p-floatlabel>
+            <div class="card w-full flex justify-around items-center flex-row gap-2">
+                <p-floatlabel variant="on" class="w-1/2">
+                    <p-datepicker inputId="membershipBuyDate" showIcon iconDisplay="input" class="w-full"
+                        appendTo="body" dataType="string" dateFormat="yy-mm-dd"
+                        [formField]="$any(this.registerForm.membershipBuyDate)" />
+                    <label for="membershipBuyDate">Buy Date</label>
+                </p-floatlabel>
+                <p-floatlabel variant="on" class="w-1/2">
+                    <p-datepicker inputId="membershipExpireDate" showIcon iconDisplay="input" class="w-full"
+                        appendTo="body" dataType="string" dateFormat="yy-mm-dd"
+                        [formField]="$any(this.registerForm.membershipExpireDate)" />
+                    <label for="membershipExpireDate">Finish Date</label>
+                </p-floatlabel>
+            </div>
+            <div class="card w-full flex justify-start items-center flex-row gap-2">
+                <label for="freeTrial">Is free trial?</label>
+                <p-checkbox [binary]="true" inputId="freeTrial" [formField]="this.registerForm.isFreeTrial" />
+            </div>
+        </div>
+        <div class="flex justify-end gap-2 mt-3">
+            <p-button label="Save" (click)="this.onRegisterForm()" />
+        </div>
+    </div>
+</form>

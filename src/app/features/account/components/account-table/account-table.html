@@ -16,7 +16,7 @@
                     <th>ID</th>
                     <th>Email</th>
                     <th>Platform</th>
-                    <th>Status</th>
+                    <th>Membership</th>
                     <th>Actions</th>
                 </tr>
             </ng-template>
@@ -26,9 +26,8 @@
                     <td>{{account.email}}</td>
                     <td>{{account.platformName}}</td>
                     <td>
-                        <p-button variant="text" [severity]="getSeverity(account.status)"
-                            (click)="changeStatusOnClick($event, account.id, account.status)">
-                            <p-tag [value]="account.status" [severity]="getSeverity(account.status)" />
+                        <p-button variant="text" severity="info" label="See Membership" [raised]="true" size="small" (click)="this.onMembershipModalClick(account.id)">
+                            <!-- <p-tag value="See Membership" severity="info" /> -->
                         </p-button>
                     </td>
                     <td>
@@ -54,6 +53,10 @@
 
         @if (this.accountDetailsId()) {
             <app-account-details (onCloseModal)="this.onCloseAccountDetailsModal()" [accountId]="accountDetailsId()!" />
+        }
+
+        @if (this.membershipIdToQuery()) {
+            <app-membership (onCloseModal)="this.onMembershipModalClick(undefined)" [membershipId]="this.membershipIdToQuery()!" />
         }
 
 

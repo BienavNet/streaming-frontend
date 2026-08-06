@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { OrderTable } from "./order-table/order-table";
+import { OrderTable } from "./components/order-table/order-table";
 
 @Component({
   selector: 'app-order',

@@ -7,7 +7,7 @@
                     <span class="font-bold text-3xl">Platforms</span>
                 </div>
                 <p-button size="small" class="flex items-center justify-start gap-2 whitespace-nowrap"
-                                label="Add New" icon="pi pi-plus" severity="secondary" (click)="this.onClickOpenRegisterForm()" />
+                                label="Add Platform" icon="pi pi-plus" severity="secondary" (click)="this.onClickOpenRegisterForm()" />
             </div>
         </ng-template>
         <p-table [value]="platformService.platforms()" class="w-full" [loading]="isLoading()">

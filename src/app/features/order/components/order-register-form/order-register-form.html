@@ -1,0 +1,66 @@
+<form>
+    <div class="card">
+        <p-dialog header="Register New Order" [draggable]="false" [modal]="true" [visible]="true" styleClass="w-120"
+            class="" [closable]="false">
+            <div class="gap-2 flex items-center flex-col mt-1">
+                <!-- <p-floatlabel variant="on" class="w-full">
+                    <input pInputText id="account" autocomplete="off" class="w-full" />
+                    <label for="account">Account</label>
+                </p-floatlabel> -->
+                <p-floatlabel variant="on" class="w-full">
+                    <p-select [options]="this.accounts()" optionValue="id" optionLabel="email"
+                        inputId="account" [filter]="true" filterBy="email" [showClear]="true"
+                        class="w-full" appendTo="body" [formField]="$any(this.registerForm.account)">
+                        <ng-template #selectedItem let-selectedOption>
+                            <div class="flex items-center gap-2">
+                                <div>{{ selectedOption.email }} - {{ selectedOption.platformName }}</div>
+                            </div>
+                        </ng-template>
+                        <ng-template let-account #item>
+                            <div class="flex items-center gap-2">
+                                <div>{{ account.email }} - {{ account.platformName }}</div>
+                            </div>
+                        </ng-template>
+                    </p-select>
+                    <label for="account">Account</label>
+                </p-floatlabel>
+                <p-floatlabel variant="on" class="w-full">
+                    <input [formField]="this.registerForm.profileAmount" pInputText type="number" id="profiles" autocomplete="off" class="w-full" />
+                    <label for="profiles">Profiles</label>
+                </p-floatlabel>
+                <div class="card w-full flex justify-around items-center flex-row gap-2">
+                    <p-floatlabel variant="on" class="w-1/2">
+                        <p-datepicker [formField]="$any(this.registerForm.buyDate)" inputId="buyDate" showIcon iconDisplay="input" class="w-full" appendTo="body"
+                            dataType="string" dateFormat="yy-mm-dd" />
+                        <label for="buyDate">Starts At</label>
+                    </p-floatlabel>
+                    <p-floatlabel variant="on" class="w-1/2">
+                        <p-datepicker [formField]="$any(this.registerForm.finishDate)" inputId="finishDate" showIcon iconDisplay="input" class="w-full"
+                            appendTo="body" dataType="string" dateFormat="yy-mm-dd" />
+                        <label for="finishDate">Ends At</label>
+                    </p-floatlabel>
+                </div>
+                <p-floatlabel variant="on" class="w-full">
+                    <input [formField]="this.registerForm.paymentAmount" pInputText id="paymentAmount" autocomplete="off" type="number" class="w-full" />
+                    <label for="paymentAmount">Payment Amount</label>
+                </p-floatlabel>
+                <p-floatlabel variant="on" class="w-full">
+                    <p-select [formField]="$any(this.registerForm.orderType)" [options]="this.orderTypes" optionValue="name"
+                        inputId="orderType" optionLabel="name" [filter]="true" filterBy="name" [showClear]="true"
+                        class="w-full" appendTo="body">
+                        <ng-template #selectedItem let-selectedOption>
+                            <div class="flex items-center gap-2">
+                                <div>{{ selectedOption.name }}</div>
+                            </div>
+                        </ng-template>
+                    </p-select>
+                    <label for="orderType">Order Type</label>
+                </p-floatlabel>
+            </div>
+            <div class="flex justify-end gap-2 mt-3">
+                <p-button label="Cancel" severity="secondary" (click)="this.onClickCloseBtn()" />
+                <p-button label="Save" (click)="this.onSaveOrder()" />
+            </div>
+        </p-dialog>
+    </div>
+</form>
