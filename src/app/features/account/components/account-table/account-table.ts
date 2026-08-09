@@ -1,7 +1,7 @@
-import { Component, effect, inject, signal } from '@angular/core';
+import { Component, effect, inject, OnInit, signal } from '@angular/core';
 import { ConfirmDialogModule } from "primeng/confirmdialog";
 import { Panel } from "primeng/panel";
-import { TableModule } from "primeng/table";
+import { TableModule, TablePageEvent } from "primeng/table";
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
 
@@ -16,6 +16,7 @@ import { AccountStatus } from '../../../../core/models/account.model';
 import { ApiError } from '../../../../core/models/apiResponse';
 import { MembershipComponent } from '../../../membership/membership.component';
 import { MembershipContextService } from '../../../../core/context/membership-context-flow/membership-context-service';
+import { Pagination } from '../../../../core/models/paginationResponse.model';
 
 @Component({
   selector: 'app-account-table',
@@ -23,14 +24,12 @@ import { MembershipContextService } from '../../../../core/context/membership-co
   providers: [ConfirmationService, MembershipContextService],
   templateUrl: './account-table.html',
   styleUrl: './account-table.css',
-}) 
-export class AccountTable {
+})
+export class AccountTable implements OnInit {
 
   private confirmationService = inject(ConfirmationService);
   private messageService = inject(MessageService);
-
   private membershipContextService = inject(MembershipContextService);
-
 
   accountService = inject(AccountService);
   isLoading = signal<boolean>(false)
@@ -43,29 +42,38 @@ export class AccountTable {
 
   isChangeStatusConfirmDialogOpen = signal<boolean>(false);
 
-  constructor() {
-    effect(() => {
-      this.isLoading.set(true);
-      this.errorMessage.set(null)
+  page = this.accountService.page;
 
-      this.accountService.loadAccounts().subscribe({
-        next: () => {
-          this.isLoading.set(false)
-        },
-        error: (e) => {
-          this.isLoading.set(false);
-          this.errorMessage.set("An error has occurred when trying to retrieve data from backend.");
-          console.error('Error loading data first time', e);
-        }
-      });
-    })
+  
+  private loadData(page?: number, offset?: number) {
+    this.isLoading.set(true);
+    this.errorMessage.set(null)
+    
+    this.accountService.loadPage(page, offset).subscribe({
+      next: () => {
+        this.isLoading.set(false);
+      },
+      error: (e) => {
+        this.isLoading.set(false);
+        this.errorMessage.set("An error has occurred when trying to retrieve data from backend.");
+        console.error('Error loading data first time', e);
+      }
+    });
   }
 
-  onRegisterFormModalClick() : void {
+  ngOnInit(): void {
+    this.loadData();
+  }
+
+  onPaginationOccurs(e: TablePageEvent) {
+    this.loadData(e.first, e.rows);
+  }
+
+  onRegisterFormModalClick(): void {
     this.isRegisterFormModalOpen.update(old => !old)
   }
 
-  onMembershipModalClick(id: string | undefined = undefined) : void {
+  onMembershipModalClick(id: string | undefined = undefined): void {
     this.membershipIdToQuery.set(id);
     this.membershipContextService.setSelectedAccount(id!);
   }
@@ -80,19 +88,19 @@ export class AccountTable {
 
   onClickDeleteBtn(event: Event, id: string) {
     this.confirmationService.confirm({
-      target: event.target as EventTarget, 
+      target: event.target as EventTarget,
       message: 'Do you want really to delete this account?',
       header: 'Delete Confirmation',
       icon: 'pi pi-info-circle',
       rejectLabel: 'Cancel',
       rejectButtonProps: {
-          label: 'Cancel',
-          severity: 'secondary',
-          outlined: true
+        label: 'Cancel',
+        severity: 'secondary',
+        outlined: true
       },
       acceptButtonProps: {
-          label: 'Delete',
-          severity: 'danger'
+        label: 'Delete',
+        severity: 'danger'
       },
       accept: () => {
 

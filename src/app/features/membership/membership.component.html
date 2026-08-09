@@ -1,7 +1,7 @@
 <p-panel>
-    <p-dialog [closable]="true" [closeOnEscape]="true" [modal]="true" [visible]="true" [draggable]="false" styleClass="w-1/3" (onHide)="this.closeModal()">
+    <p-dialog [closable]="true" [closeOnEscape]="true" [modal]="true" [visible]="true" [draggable]="false" styleClass="w-xl" (onHide)="this.closeModal()">
         <ng-template #header>
-            <div class="w-full flex justify-between items-center px-4">
+            <div class="w-full flex justify-between items-center px-4 ">
                 <div>
                     <span class="font-bold text-3xl">Membership</span>
                 </div>
@@ -16,17 +16,20 @@
             </div>
         </ng-template>
 
-        @if (!this.membershipDetails()) {
-            @if (this.isRegisterFormActive()) {
-                <app-register-membership-form-component />
+        <div class="flex justify-center items-center">
+            @if (!this.membershipDetails()) {
+                @if (this.isRegisterFormActive()) {
+                    <app-register-membership-form-component />
+                } @else {
+                    <span>No membership has been registered for this account.</span>
+                }
+    
             } @else {
-                <span>No membership has been registered for this account.</span>
+                <app-membership-card-component [membership]="this.membershipDetails()!" />
+                
             }
+        </div>
 
-        } @else {
-            <app-membership-card-component [membership]="this.membershipDetails()!" />
-            
-        }
 
     </p-dialog>
 </p-panel>

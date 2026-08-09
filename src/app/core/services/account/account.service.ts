@@ -4,48 +4,51 @@ import { environment } from '../../../../environments/environment.development';
 import { ApiError, ApiResponse, defaultApiError } from '../../models/apiResponse';
 import { Account, AccountDetails, AccountRegister, AccountUpdate } from '../../models/account.model';
 import { catchError, map, Observable, tap, throwError } from 'rxjs';
+import { Pagination } from '../../models/paginationResponse.model';
 
 @Service()
 export class AccountService {
     private http = inject(HttpClient);
     private apiUrl = `${environment.api_base_url}/account`;
+    
+    private readonly PAGE = 0;
+    private readonly OFFSET = 10;
 
     private readonly defaultError = defaultApiError;
 
-    private _accounts = signal<AccountDetails[]>([]);
-    accounts = this._accounts.asReadonly();
+    private _pagination = signal<Pagination<AccountDetails[]>>({
+        content: [],
+        totalElements: 0,
+        totalPages: 0
+    });
+
+    page = this._pagination.asReadonly();
 
     private defineCatchError = ((error: HttpErrorResponse) => {
         const apiError: ApiError = error.error || this.defaultError
         return throwError(() => apiError);
     })
 
-    loadAccounts(page: number = 0, offset: number = 0) : Observable<AccountDetails[]> {
-        return this.http.get<ApiResponse<AccountDetails[]>>(`${this.apiUrl}/details/${page}/${offset}`)
-                .pipe(
-                    map(response => response.data as AccountDetails[]),
-                    tap(data => this._accounts.set(data)),
-                    catchError(this.defineCatchError)
-                )
+    loadPage(page?: number, offset?: number ) : Observable<void> {
+        if (!page)
+            page = this.PAGE
+        if (!offset)
+            offset = this.OFFSET
+
+        return this.http.get<ApiResponse<Pagination<AccountDetails[]>>>(`${this.apiUrl}/details/${page}/${offset}`)
+            .pipe(
+                map(response => response.data as Pagination<AccountDetails[]>),
+                tap(data => this._pagination.set(data)),
+                map(() => {}),
+                catchError(this.defineCatchError)
+            )
     }
 
-    createAccount(account: AccountRegister) : Observable<Account> {
+    createAccount(account: AccountRegister) : Observable<void> {
         return this.http.post<ApiResponse<Account>>(this.apiUrl, account)
                 .pipe(
-                    map(response => response.data as Account),
-                    tap( data => {
-                        this._accounts.update(
-                            oldList => [
-                                ...oldList,
-                                {
-                                    id: data.id,
-                                    email: data.email,
-                                    platformName: data.platform.name,
-                                    status: data.status
-                                }
-                            ]
-                        )
-                    }),
+                    map(response => {}),
+                    tap(_ => this.loadPage()),
                     catchError(this.defineCatchError)
                 )
     }
@@ -59,34 +62,44 @@ export class AccountService {
                 )
     }
 
-    updateAccount(id: string, accountUpdate: Partial<AccountUpdate>) : Observable<Account> {
+    updateAccount(id: string, accountUpdate: Partial<AccountUpdate>) : Observable<void> {
         return this.http.put<ApiResponse<Account>>(`${this.apiUrl}/${id}`, accountUpdate)
-                .pipe(
-                    map(response => response.data as Account),
-                    tap(data => {
-                        const dataUpdated: AccountDetails = {
-                            id: data.id,
-                            email: data.email,
-                            platformName: data.platform.name,
-                            status: data.status
-                        }
+                // .pipe(
+                //     map(response => response.data as Account),
+                //     tap(data => {
+                //         const dataUpdated: AccountDetails = {
+                //             id: data.id,
+                //             email: data.email,
+                //             platformName: data.platform.name,
+                //             status: data.status
+                //         }
 
-                        this._accounts.update(oldList => 
-                            oldList.map(
-                                acc => acc.id === id ? dataUpdated : acc
-                            )
-                        )
-                    }),
+                //         this._accounts.update(oldList => 
+                //             oldList.map(
+                //                 acc => acc.id === id ? dataUpdated : acc
+                //             )
+                //         )
+                //     }),
+                //     catchError(this.defineCatchError)
+                // )
+                .pipe(
+                    map(response => {}),
+                    tap(_ => this.loadPage()),
                     catchError(this.defineCatchError)
                 )
     }
 
     deleteAccount(id: string) : Observable<void> {
         return this.http.delete<void>(`${this.apiUrl}/${id}`)
+                // .pipe(
+                //     tap( _ => {
+                //         this._accounts.update(oldList => oldList.filter(acc => acc.id !== id))
+                //     }),
+                //     catchError(this.defineCatchError)
+                // )
                 .pipe(
-                    tap( _ => {
-                        this._accounts.update(oldList => oldList.filter(acc => acc.id !== id))
-                    }),
+                    map(response => {}),
+                    tap(_ => this.loadPage()),
                     catchError(this.defineCatchError)
                 )
     }
@@ -95,7 +108,7 @@ export class AccountService {
         return this.http.put<ApiResponse<void>>(`${this.apiUrl}/deactivate/${id}`, {})
                 .pipe(
                     tap( _ => {
-                        this.loadAccounts().subscribe()
+                        this.loadPage().subscribe()
                     }),
                     catchError(this.defineCatchError)
                 )

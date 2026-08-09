@@ -10,7 +10,17 @@
                     icon="pi pi-plus" severity="secondary" (click)="this.onRegisterFormModalClick()" />
             </div>
         </ng-template>
-        <p-table [value]="accountService.accounts()" class="w-full" [loading]="isLoading()" [scrollable]="true">
+        <p-table 
+            [value]="page().content" 
+            class="w-full" 
+            [loading]="isLoading()" 
+            [scrollable]="true"
+            [paginator]="true"
+            [rows]="page().totalPages"
+            [rowsPerPageOptions]="[10]"
+            sortField="email"
+            (onPage)="onPaginationOccurs($event)"
+            >
             <ng-template #header>
                 <tr>
                     <th>ID</th>

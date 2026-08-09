@@ -28,7 +28,7 @@ export class OrderRegisterForm implements OnInit {
   loading = signal<boolean>(false)
   errorMessage = signal<string>('')
   
-  accounts = computed<AccountDetails[]>(this.accountService.accounts)
+  page = this.accountService.page
   orderTypes = ORDER_TYPES
 
   registerFormSchema = signal<OrderRegister>({
@@ -54,13 +54,13 @@ export class OrderRegisterForm implements OnInit {
 
   ngOnInit(): void {
     this._loadAccountsWhenComponentIsReady();
-    console.log(this.accounts())
+    console.log(this.page().content)
   }
 
   private _loadAccountsWhenComponentIsReady() {
     this.loading.set(true);
 
-    this.accountService.loadAccounts().subscribe()
+    this.accountService.loadPage().subscribe()
   }
 
   private _getFormErrorMessage(): string[] {

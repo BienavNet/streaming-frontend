@@ -152,8 +152,6 @@ export class AccountRegisterForm {
 
       return
     }
-
-    console.log(this.registerFormModel())
     this.saveAccount()
   }
 
