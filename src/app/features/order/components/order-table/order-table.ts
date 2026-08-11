@@ -6,12 +6,15 @@ import { PanelModule } from 'primeng/panel';
 import { ButtonModule } from 'primeng/button';
 
 import { OrderRegisterForm } from '../order-register-form/order-register-form';
+import { OrderDetailsComponent } from '../order-details-component/order-details-component';
 import { OrderService } from '../../../../core/services/order/order.service';
 import { OrderDetails } from '../../../../core/models/order.model';
+import { ConfirmationService, MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-order-table',
-  imports: [TableModule, ConfirmDialogModule, PanelModule, ButtonModule, OrderRegisterForm],
+  imports: [TableModule, ConfirmDialogModule, PanelModule, ButtonModule, OrderRegisterForm, OrderDetailsComponent],
+  providers: [ConfirmationService, MessageService],
   templateUrl: './order-table.html',
   styleUrl: './order-table.css',
 })
@@ -22,6 +25,7 @@ export class OrderTable implements OnInit {
   isLoading = signal<boolean>(false);
   
   isAddNewClicked = signal<boolean>(false)
+  showOrderDetailsId = signal<string | null>(null);
 
   orders = signal<OrderDetails[]>([]);
   
@@ -40,5 +44,13 @@ export class OrderTable implements OnInit {
         this.isLoading.set(false);
       }  
     })
+  }
+
+  onClickShowInfoBtn(id: string) : void {
+    this.showOrderDetailsId.set(id);
+  }
+
+  onCloseDetailsModal(): void {
+    this.showOrderDetailsId.set(null);
   }
 }

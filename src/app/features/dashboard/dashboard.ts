@@ -3,11 +3,11 @@ import { PlatformComponent } from '../platform/platform';
 import { SplitterModule } from 'primeng/splitter';
 import { Button } from "primeng/button";
 import { AccountComponent } from "../account/account.component";
-import { Order } from "../order/order";
+import { OrderComponent } from "../order/order-component";
 
 @Component({
   selector: 'app-dashboard',
-  imports: [SplitterModule, Button, PlatformComponent, AccountComponent, Order],
+  imports: [SplitterModule, Button, PlatformComponent, AccountComponent, OrderComponent],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })

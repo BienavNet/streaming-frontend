@@ -16,10 +16,11 @@
             [loading]="isLoading()" 
             [scrollable]="true"
             [paginator]="true"
-            [rows]="page().totalPages"
-            [rowsPerPageOptions]="[10]"
+            [rows]="page().currentSize"
+            [totalRecords]="page().totalPages ? page().totalPages : 1"
             sortField="email"
             (onPage)="onPaginationOccurs($event)"
+            [rowsPerPageOptions]="[5, 10, 20]"
             >
             <ng-template #header>
                 <tr>

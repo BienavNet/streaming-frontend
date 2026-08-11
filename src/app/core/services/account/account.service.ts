@@ -19,7 +19,8 @@ export class AccountService {
     private _pagination = signal<Pagination<AccountDetails[]>>({
         content: [],
         totalElements: 0,
-        totalPages: 0
+        totalPages: 0,
+        currentSize: 0
     });
 
     page = this._pagination.asReadonly();
@@ -38,7 +39,13 @@ export class AccountService {
         return this.http.get<ApiResponse<Pagination<AccountDetails[]>>>(`${this.apiUrl}/details/${page}/${offset}`)
             .pipe(
                 map(response => response.data as Pagination<AccountDetails[]>),
-                tap(data => this._pagination.set(data)),
+                tap(data => {
+                    this._pagination.set({
+                        ...data, 
+                        currentSize: data.content.length < offset ? data.content.length : offset
+                    })
+                    
+                }),
                 map(() => {}),
                 catchError(this.defineCatchError)
             )

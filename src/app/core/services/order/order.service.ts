@@ -4,6 +4,7 @@ import { environment } from '../../../../environments/environment.development';
 import { ApiError, ApiResponse, defaultApiError } from '../../models/apiResponse';
 import { OrderDetails, OrderRegister } from '../../models/order.model';
 import { catchError, map, Observable, tap, throwError } from 'rxjs';
+import { Order } from '../../models/order.model';
 
 
 @Service()
@@ -36,6 +37,14 @@ export class OrderService {
         return this.http.post<ApiResponse<string>>(this.apiUrl, order)
                 .pipe(
                     map(res => res.data as string),
+                    catchError(this.defineCatchError)
+                )
+    }
+
+    getOrderById(orderId: string) : Observable<Order> {
+        return this.http.get<ApiResponse<Order>>(`${this.apiUrl}/${orderId}`)
+                .pipe(
+                    map(response => response.data as Order),
                     catchError(this.defineCatchError)
                 )
     }

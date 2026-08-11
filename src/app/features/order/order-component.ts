@@ -4,7 +4,7 @@ import { OrderTable } from "./components/order-table/order-table";
 @Component({
   selector: 'app-order',
   imports: [OrderTable],
-  templateUrl: './order.html',
-  styleUrl: './order.css',
+  templateUrl: './order-component.html',
+  styleUrl: './order-component.css',
 })
-export class Order {}
+export class OrderComponent {}

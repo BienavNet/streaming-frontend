@@ -1,5 +1,5 @@
 <div class="w-full h-full card flex justify-center items-center">
-    <!-- <p-confirmdialog /> -->    
+    <p-confirmdialog />    
     <p-panel class="w-5/6 h-11/12 flex p-8 text-xl">
         <ng-template #header>
             <div class="w-full flex justify-between items-center px-4">
@@ -10,11 +10,17 @@
                     icon="pi pi-plus" severity="secondary" (click)="this.onClickNewBtn()" />
             </div>
         </ng-template>
-        <p-table [value]="this.orders()" class="w-full" [loading]="this.isLoading()" [scrollable]="true">
+        <p-table 
+            [value]="this.orders()"
+            class="w-full" 
+            [loading]="this.isLoading()" 
+            [scrollable]="true"
+            
+            >
             <ng-template #header>
                 <tr>
                     <th>ID</th>
-                    <th>Email</th>
+                    <th>Account Email</th>
                     <th>Platform</th>
                     <th>Buy At</th>
                     <th>Type</th>
@@ -31,7 +37,8 @@
                     <td>
                         <div class="card flex flex-row items-center justify-center gap-1">
                             <p-button size="small" class="flex items-center justify-start gap-2 whitespace-nowrap"
-                                label="Show Info" icon="pi pi-id-card" severity="info" />
+                                label="Show Info" icon="pi pi-id-card" severity="info" 
+                                (click)="onClickShowInfoBtn(order.id)" />
 
                         </div>
                     </td>
@@ -44,6 +51,13 @@
 
     @if (this.isAddNewClicked()) {
         <app-order-register-form (onCloseModal)="this.onClickNewBtn()" />
+    }
+
+    @if (this.showOrderDetailsId()) {
+        <app-order-details-component
+            [orderId]="showOrderDetailsId()!"
+            (onCloseModal)="onCloseDetailsModal()"
+        />
     }
 
 </div>
