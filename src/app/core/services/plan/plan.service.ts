@@ -45,4 +45,8 @@ export class PlanService {
                 })
             )
     }
+
+    filterPlan(field: string, criteria: string) : Observable<ApiResponse<Plan[]>> {
+        return this.http.get<ApiResponse<Plan[]>>(`${this.apiUrl}/filter/${field}/${criteria}`)
+    }
 }

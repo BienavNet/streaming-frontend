@@ -11,11 +11,16 @@
             </div>
         </ng-template>
         <p-table 
-            [value]="this.orders()"
+            [value]="this.page().content"
             class="w-full" 
             [loading]="this.isLoading()" 
             [scrollable]="true"
-            
+            [paginator]="true"
+            [rows]="page().currentSize"
+            [totalRecords]="page().totalPages ? page().totalPages : 1"
+            sortField="email"
+            (onPage)="onPaginationOccurs($event)"
+            [rowsPerPageOptions]="[5, 10, 20]"
             >
             <ng-template #header>
                 <tr>
@@ -33,7 +38,7 @@
                     <td>{{order.accountEmail}}</td>
                     <td>{{order.platformName}}</td>
                     <td>{{order.buyDate}}</td>
-                    <td>{{order.orderType}}</td>
+                    <td><p-tag severity="info" [value]="order.orderType" /></td>
                     <td>
                         <div class="card flex flex-row items-center justify-center gap-1">
                             <p-button size="small" class="flex items-center justify-start gap-2 whitespace-nowrap"

@@ -1,5 +1,5 @@
-import { Component, computed, effect, inject, output, signal } from '@angular/core';
-import { email, form, required } from '@angular/forms/signals';
+import { Component, computed, effect, inject, OnInit, output, signal } from '@angular/core';
+import { disabled, email, form, required } from '@angular/forms/signals';
 import { FormField } from '@angular/forms/signals';
 
 import { InputTextModule } from 'primeng/inputtext';
@@ -7,8 +7,8 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 import { PanelModule } from 'primeng/panel';
 import { ButtonModule } from 'primeng/button';
 import { DatePickerModule } from 'primeng/datepicker';
-import { CheckboxModule } from 'primeng/checkbox';
-import { SelectChangeEvent, SelectModule } from 'primeng/select';
+import { CheckboxChangeEvent, CheckboxModule } from 'primeng/checkbox';
+import { SelectChangeEvent, SelectFilterEvent, SelectModule } from 'primeng/select';
 
 import { Dialog } from "primeng/dialog";
 
@@ -20,6 +20,8 @@ import { PaymentService } from '../../../../core/services/payment/payment.servic
 import { AccountRegister } from '../../../../core/models/account.model';
 import { AccountService } from '../../../../core/services/account/account.service';
 import { Payment, PaymentRegister } from '../../../../core/models/payment.model';
+import { debounceTime, distinctUntilChanged, of, Subject, switchMap, takeUntil } from 'rxjs';
+import { ApiResponse } from '../../../../core/models/apiResponse';
 
 @Component({
   selector: 'app-account-register-form',
@@ -38,25 +40,19 @@ import { Payment, PaymentRegister } from '../../../../core/models/payment.model'
   styleUrl: './account-register-form.css',
   standalone: true
 })
-export class AccountRegisterForm {
+export class AccountRegisterForm implements OnInit {
 
   private platformService = inject(PlatformService);
   private paymentService = inject(PaymentService);
   private accountService = inject(AccountService);
   private messageService = inject(MessageService);
 
-  payments = computed(() => {
-    const realPayments: Payment[] = this.paymentService.payments();
+  private filterPlatformInput$ = new Subject<string>();
+  private filterPaymentInput$ = new Subject<string>();
+  private destroy$ = new Subject<void>();
 
-    return [
-      {
-        id: "NEW_PAYMENT",
-        card: "Add New Payment...",
-      },
-      ...realPayments
-    ]
-  });
-  platforms = computed(this.platformService.platforms);
+  platforms = signal<Platform[]>([]);
+  payments = signal<Payment[]>([]);
   selectedPlatform: Platform | undefined = undefined;
   addNewPaymentIsClicked = signal<boolean>(false);
 
@@ -71,9 +67,10 @@ export class AccountRegisterForm {
 
   registerForm = form(this.registerFormModel, (schemaPath) => {
     required(schemaPath.email),
-      email(schemaPath.email),
-      required(schemaPath.password),
-      required(schemaPath.platform)
+    email(schemaPath.email),
+    required(schemaPath.password),
+    required(schemaPath.platform),
+    disabled(schemaPath.payment, { when: () => this.addNewPaymentIsClicked() });
   })
 
   paymentRegisterFormModel = signal<PaymentRegister>({
@@ -86,36 +83,51 @@ export class AccountRegisterForm {
 
   paymentRegisterForm = form(this.paymentRegisterFormModel, (schemaPath) => {
     required(schemaPath.number),
-      required(schemaPath.month),
-      required(schemaPath.year),
-      required(schemaPath.cvv)
+    required(schemaPath.month),
+    required(schemaPath.year),
+    required(schemaPath.cvv)
   })
 
-  constructor() {
-    effect(() => {
-      this.platformService.loadPlatforms().subscribe()
-      this.paymentService.loadPayments().subscribe()
-    })
+
+  ngOnInit(): void {
+    // this.platformService.loadPlatforms().subscribe()
+    // this.paymentService.loadPayments().subscribe()
+    this._loadDebouncedFilterForPlatform();
+    this._loadDebouncedFilterForPayment();
+  }
+
+  onPlatformFilter(event: SelectFilterEvent): void {
+    this.filterPlatformInput$.next(event.filter);
+  }
+
+  onPaymentFilter(event: SelectFilterEvent): void {
+    this.filterPaymentInput$.next(event.filter);
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   addNewPaymentOnClick(): void {
     this.addNewPaymentIsClicked.update(old => !old);
   }
 
-  onChangePaymentSelect(event: SelectChangeEvent) {
-    if (event.value === 'NEW_PAYMENT') {
-      this.addNewPaymentIsClicked.set(true); // Muestra el sub-formulario
+  onChangePaymentSelect() {
+    this.addNewPaymentIsClicked.update(old => !old);
+    // if (event.value === 'NEW_PAYMENT') {
+    //   this.addNewPaymentIsClicked.set(true); // Muestra el sub-formulario
 
-      // Opcional: Limpiamos el valor del field para que no quede "NEW_PAYMENT" en tu modelo
-      this.registerFormModel.update(old => ({ ...old, payment: '' }));
-    } else {
-      // Si elige cualquier otra tarjeta real, ocultamos el formulario de creación
-      this.addNewPaymentIsClicked.set(false);
-    }
+    //   // Opcional: Limpiamos el valor del field para que no quede "NEW_PAYMENT" en tu modelo
+    //   this.registerFormModel.update(old => ({ ...old, payment: '' }));
+    // } else {
+    //   // Si elige cualquier otra tarjeta real, ocultamos el formulario de creación
+    //   this.addNewPaymentIsClicked.set(false);
+    // }
   }
 
   saveAccountOnClick(): void {
-    if (!this.registerForm().valid()){
+    if (!this.registerForm().valid()) {
       var errors = this._getFormErrorMessage()
       errors.map(error => {
 
@@ -123,13 +135,13 @@ export class AccountRegisterForm {
           return
 
         this.messageService.add({
-        closable: true,
-        summary: "Form Error",
-        severity: "error",
-        detail: error
+          closable: true,
+          summary: "Form Error",
+          severity: "error",
+          detail: error
+        })
       })
-      })
-      
+
       return
     }
 
@@ -154,8 +166,6 @@ export class AccountRegisterForm {
     }
     this.saveAccount()
   }
-
-
 
   private saveAccount(): void {
     this.accountService.createAccount(this.registerFormModel()).subscribe({
@@ -185,9 +195,49 @@ export class AccountRegisterForm {
     const form = this.registerForm;
 
     const message = (Object.keys(form) as Array<keyof AccountRegister>).map(key => (
-      form[key]().invalid() ? `${key} - ${form[key]().errorSummary().map( error => (error.kind))}` : ""
+      form[key]().invalid() ? `${key} - ${form[key]().errorSummary().map(error => (error.kind))}` : ""
     ))
 
     return message;
+  }
+
+  private _loadDebouncedFilterForPlatform(): void {
+    this.filterPlatformInput$.pipe(
+      debounceTime(400),
+      distinctUntilChanged(),
+      switchMap((textFilter: string) => {
+        if (!textFilter || textFilter.trim().length === 0) {
+          return of({ id: '', status: 200, message: '', data: [] } as ApiResponse<Platform[]>);
+        }
+
+        return this.platformService.filterPlatform("platform_name", textFilter);
+      }),
+      takeUntil(this.destroy$)
+    ).subscribe({
+      next: (resultados: ApiResponse<Platform[]>) => {
+        this.platforms.set(resultados.data);
+      },
+      error: (err) => console.error('Error al filtrar:', err)
+    });
+  }
+
+  private _loadDebouncedFilterForPayment(): void {
+    this.filterPaymentInput$.pipe(
+      debounceTime(400),
+      distinctUntilChanged(),
+      switchMap((textFilter: string) => {
+        if (!textFilter || textFilter.trim().length === 0) {
+          return of({ id: '', status: 200, message: '', data: [] } as ApiResponse<Payment[]>);
+        }
+
+        return this.paymentService.filterPayment("payment_number", textFilter);
+      }),
+      takeUntil(this.destroy$)
+    ).subscribe({
+      next: (results: ApiResponse<Payment[]>) => {
+        this.payments.set(results.data);
+      },
+      error: (err) => console.error('Error al filtrar:', err)
+    });
   }
 }

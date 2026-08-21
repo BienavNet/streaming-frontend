@@ -71,24 +71,6 @@ export class AccountService {
 
     updateAccount(id: string, accountUpdate: Partial<AccountUpdate>) : Observable<void> {
         return this.http.put<ApiResponse<Account>>(`${this.apiUrl}/${id}`, accountUpdate)
-                // .pipe(
-                //     map(response => response.data as Account),
-                //     tap(data => {
-                //         const dataUpdated: AccountDetails = {
-                //             id: data.id,
-                //             email: data.email,
-                //             platformName: data.platform.name,
-                //             status: data.status
-                //         }
-
-                //         this._accounts.update(oldList => 
-                //             oldList.map(
-                //                 acc => acc.id === id ? dataUpdated : acc
-                //             )
-                //         )
-                //     }),
-                //     catchError(this.defineCatchError)
-                // )
                 .pipe(
                     map(response => {}),
                     tap(_ => this.loadPage()),
@@ -98,12 +80,6 @@ export class AccountService {
 
     deleteAccount(id: string) : Observable<void> {
         return this.http.delete<void>(`${this.apiUrl}/${id}`)
-                // .pipe(
-                //     tap( _ => {
-                //         this._accounts.update(oldList => oldList.filter(acc => acc.id !== id))
-                //     }),
-                //     catchError(this.defineCatchError)
-                // )
                 .pipe(
                     map(response => {}),
                     tap(_ => this.loadPage()),
@@ -117,6 +93,14 @@ export class AccountService {
                     tap( _ => {
                         this.loadPage().subscribe()
                     }),
+                    catchError(this.defineCatchError)
+                )
+    }
+
+    filterAccount(field:string, criteria: string): Observable<ApiResponse<Account[]>> {
+        return this.http.get<ApiResponse<Account[]>>(`${this.apiUrl}/filter/${field}/${criteria}`)
+                .pipe(
+                    tap(response => response),
                     catchError(this.defineCatchError)
                 )
     }

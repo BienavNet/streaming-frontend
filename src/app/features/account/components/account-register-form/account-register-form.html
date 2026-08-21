@@ -5,55 +5,47 @@
             [closable]="false" [blockScroll]="true" [autofocus]="true" [contentStyle]="{'overflow': 'visible'}">
             <div class="gap-2 flex items-center flex-col mt-1">
                 <p-floatlabel variant="on" class="w-full">
-                    <input pInputText id="email" [formField]="this.registerForm.email" autocomplete="off" class="w-full" />
+                    <input pInputText id="email" [formField]="this.registerForm.email" autocomplete="off"
+                        class="w-full" />
                     <label for="email">Email</label>
                 </p-floatlabel>
                 <p-floatlabel variant="on" class="w-full">
-                    <input pInputText id="password" [formField]="this.registerForm.password" autocomplete="off" class="w-full" />
+                    <input pInputText id="password" [formField]="this.registerForm.password" autocomplete="off"
+                        class="w-full" />
                     <label for="password">Password</label>
                 </p-floatlabel>
-                
+
                 <div class="card w-full flex justify-around items-center flex-row gap-2">
+                    <div class="w-full flex flex-col justify-end items-start mt-6 gap-0.5">
+                        <p-floatlabel variant="on" class="w-full">
+                            <p-select [formField]="$any(this.registerForm.payment)"
+                                (onFilter)="this.onPaymentFilter($event)" [options]="this.payments()" optionValue="id"
+                                optionLabel="card" [filter]="true" filterBy="card" [showClear]="true" inputId="payment"
+                                class="w-full" appendTo="body">
+                                <ng-template #selectedItem let-selectedOption>
+                                    <div class="flex items-center gap-2">
+                                        <div>{{ selectedOption.card }}</div>
+                                    </div>
+                                </ng-template>
+                                <ng-template let-payment #item>
+                                    <div class="flex items-center gap-2">
+                                        <div>{{ payment.card }}</div>
+                                    </div>
+                                </ng-template>
+                            </p-select>
+                            <label for="payment">Payment</label>
+                        </p-floatlabel>
+                        <div>
+                            <p-checkbox [value]="this.addNewPaymentIsClicked()" [binary]="true"
+                                (onChange)="onChangePaymentSelect()" inputId="addPayment" [disabled]="this.registerForm.payment().controlValue() ? true:false" />
+                            <label for="addPayment" class="ml-2">Add new payment</label>
+                        </div>
+                    </div>
                     <p-floatlabel variant="on" class="w-full">
-                        <p-select 
-                            [formField]="$any(this.registerForm.payment)"
-                            [options]="this.payments()" 
-                            optionValue="id"
-                            optionLabel="card" 
-                            [filter]="true" 
-                            filterBy="card"
-                            [showClear]="true" 
-                            inputId="payment" 
-                            class="w-full" 
-                            appendTo="body"
-                            (onChange)="onChangePaymentSelect($event)"
-                        >
-                            <ng-template #selectedItem let-selectedOption>
-                                <div class="flex items-center gap-2">
-                                    <div>{{ selectedOption.card }}</div>
-                                </div>
-                            </ng-template>
-                            <ng-template let-payment #item>
-                                <div class="flex items-center gap-2">
-                                    <div>{{ payment.card }}</div>
-                                </div>
-                            </ng-template>
-                        </p-select>
-                        <label for="payment">Payment</label>
-                    </p-floatlabel>
-                    <p-floatlabel variant="on" class="w-full">
-                        <p-select 
-                            [formField]="$any(this.registerForm.platform)"
-                            [options]="this.platforms()"
-                            optionValue="id"
-                            inputId="platform" 
-                            optionLabel="name" 
-                            [filter]="true"
-                            filterBy="name" 
-                            [showClear]="true" 
-                            class="w-full" 
-                            appendTo="body" 
-                        >
+                        <p-select [formField]="$any(this.registerForm.platform)"
+                            (onFilter)="this.onPlatformFilter($event)" [options]="this.platforms()" optionValue="id"
+                            inputId="platform" optionLabel="name" [filter]="true" filterBy="name" [showClear]="true"
+                            class="w-full" appendTo="body">
                             <ng-template #selectedItem let-selectedOption>
                                 <div class="flex items-center gap-2">
                                     <div>{{ selectedOption.name }}</div>
@@ -74,57 +66,32 @@
                 <span class="form-title-separator">Add Payment</span>
                 <div class="card w-full flex justify-around items-center flex-row gap-2">
                     <p-floatlabel variant="on" class="w-full">
-                        <input 
-                            pInputText 
-                            id="number"
-                            autocomplete="off" 
-                            class="w-full" 
-                            [formField]="this.paymentRegisterForm.number"
-                        />
+                        <input pInputText id="number" autocomplete="off" class="w-full"
+                            [formField]="this.paymentRegisterForm.number" />
                         <label for="number">Card Number</label>
                     </p-floatlabel>
                     <div class="card w-full flex justify-around items-center flex-row gap-2">
                         <p-floatlabel variant="on" class="w-full">
-                            <p-datepicker 
-                                id="month" 
-                                view="month" 
-                                dateFormat="mm" 
-                                [formField]="$any(this.paymentRegisterForm.month)"
-                                dataType="string"
-                            />
+                            <p-datepicker id="month" view="month" dateFormat="mm"
+                                [formField]="$any(this.paymentRegisterForm.month)" dataType="string" />
                             <label for="month">Month</label>
                         </p-floatlabel>
                         <p-floatlabel variant="on" class="w-full">
-                            <p-datepicker 
-                                id="year" 
-                                view="year" 
-                                dateFormat="yy" 
-                                [formField]="$any(this.paymentRegisterForm.year)"
-                                dataType="string"
-                            />
+                            <p-datepicker id="year" view="year" dateFormat="yy"
+                                [formField]="$any(this.paymentRegisterForm.year)" dataType="string" />
                             <label for="year">Year</label>
                         </p-floatlabel>
                         <p-floatlabel variant="on" class="w-full">
-                            <input 
-                                pInputText 
-                                id="cvv" 
-                                autocomplete="off" 
-                                class="w-full" 
-                                [formField]="this.paymentRegisterForm.cvv"
-                            />
+                            <input pInputText id="cvv" autocomplete="off" class="w-full"
+                                [formField]="this.paymentRegisterForm.cvv" />
                             <label for="cvv">CVV</label>
                         </p-floatlabel>
                     </div>
                 </div>
                 <div class="card w-full flex justify-around items-center flex-row gap-2">
                     <p-floatlabel variant="on" class="w-full">
-                        <input 
-                            pInputText 
-                            id="password" 
-                            autocomplete="off" 
-                            class="w-full" 
-                            [formField]="this.paymentRegisterForm.bankName"
-                        />
+                        <input pInputText id="password" autocomplete="off" class="w-full"
+                            [formField]="this.paymentRegisterForm.bankName" />
                         <label for="password">Bank Name</label>
                     </p-floatlabel>
                 </div>

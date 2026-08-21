@@ -27,7 +27,7 @@ export class RegisterPlanForm implements OnInit {
     platform: '',
     profiles: NaN
   })
-
+ 
   registerForm = form(this.registerPlanModel, (schemaPath) => {
     disabled(schemaPath.platform),
     required(schemaPath.plan),

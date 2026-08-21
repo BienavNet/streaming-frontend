@@ -11,6 +11,12 @@ export class PaymentService {
     private apiUrl = `${environment.api_base_url}/payment`;
     private defaultError = defaultApiError;
 
+    
+    private defineCatchError = ((error: HttpErrorResponse) => {
+        const apiError: ApiError = error.error || this.defaultError
+        return throwError(() => apiError);
+    })
+    
     private _payments = signal<Payment[]>([]);
     public payments = this._payments.asReadonly();
 
@@ -58,5 +64,13 @@ export class PaymentService {
                     return throwError(() => apiError);
                 })
             )
+    }
+
+    filterPayment(field: string, criteria: string) : Observable<ApiResponse<Payment[]>> {
+        return this.http.get<ApiResponse<Payment[]>>(`${this.apiUrl}/filter/${field}/${criteria}`)
+                .pipe(
+                    map(response => response),
+                    catchError(this.defineCatchError)
+                )
     }
 }

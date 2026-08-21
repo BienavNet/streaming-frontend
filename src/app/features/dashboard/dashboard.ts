@@ -1,29 +1,25 @@
 import { Component, signal } from '@angular/core';
-import { PlatformComponent } from '../platform/platform';
 import { SplitterModule } from 'primeng/splitter';
-import { Button } from "primeng/button";
-import { AccountComponent } from "../account/account.component";
-import { OrderComponent } from "../order/order-component";
+
+import { LateralMenuComponent } from './components/lateral-menu-component/lateral-menu-component';
+import { ContentComponent } from './components/content-component/content-component';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [SplitterModule, Button, PlatformComponent, AccountComponent, OrderComponent],
+  imports: [SplitterModule, LateralMenuComponent, ContentComponent],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })
 export class Dashboard {
+  lateralMenuStatus = signal<boolean>(true);
 
-  currentActiveTab = signal<string>("home");
+  currentTab = signal<string>("");
 
-  isLateralMenuOpen = signal<boolean>(true);
-
-  changeStateLateralMenu() : void {
-    this.isLateralMenuOpen.update(old => !old);
+  setCurrentTab(tab : string) : void {
+    this.currentTab.set(tab);
   }
 
-  setCurrentTab(tabClicked: string) : void {
-    this.currentActiveTab.set(tabClicked.toLocaleLowerCase());
+  setCurrentLateralMenuStatus(status: boolean) : void {
+    this.lateralMenuStatus.set(status);
   }
-
-
 }

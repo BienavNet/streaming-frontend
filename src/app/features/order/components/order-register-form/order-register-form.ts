@@ -5,14 +5,15 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { DatePickerModule } from 'primeng/datepicker';
 import { FormsModule } from '@angular/forms';
-import { SelectModule } from 'primeng/select';
+import { SelectFilterEvent, SelectModule } from 'primeng/select';
 import { ORDER_TYPES, OrderRegister } from '../../../../core/models/order.model';
 import { AccountService } from '../../../../core/services/account/account.service';
-import { AccountDetails } from '../../../../core/models/account.model';
+import { Account, AccountDetails } from '../../../../core/models/account.model';
 import { form, required, FormField, schema } from '@angular/forms/signals';
 import { MessageService } from 'primeng/api';
 import { OrderService } from '../../../../core/services/order/order.service';
 import { ApiError, ApiResponse } from '../../../../core/models/apiResponse';
+import { debounceTime, distinctUntilChanged, of, Subject, switchMap, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-order-register-form',
@@ -25,10 +26,15 @@ export class OrderRegisterForm implements OnInit {
   private orderService = inject(OrderService);
   private accountService = inject(AccountService);
   private messageService = inject(MessageService);
+
+  private filterAccountInput$ = new Subject<string>();
+  private destroyInput$ = new Subject<void>();
+
   loading = signal<boolean>(false)
   errorMessage = signal<string>('')
   
-  page = this.accountService.page
+  // page = this.accountService.page
+  accounts = signal<Account[]>([]);
   orderTypes = ORDER_TYPES
 
   registerFormSchema = signal<OrderRegister>({
@@ -53,14 +59,33 @@ export class OrderRegisterForm implements OnInit {
 
 
   ngOnInit(): void {
-    this._loadAccountsWhenComponentIsReady();
-    console.log(this.page().content)
+    // this._loadAccountsWhenComponentIsReady();
+    // console.log(this.page().content)
+    this._loadDebouncedFilterForAccount();
   }
 
-  private _loadAccountsWhenComponentIsReady() {
-    this.loading.set(true);
+  private _loadDebouncedFilterForAccount() {
+    // this.loading.set(true);
 
-    this.accountService.loadPage().subscribe()
+    // this.accountService.loadPage().subscribe()
+
+    this.filterAccountInput$.pipe(
+      debounceTime(400),
+      distinctUntilChanged(),
+      switchMap((textFilter: string) => {
+        if (!textFilter || textFilter.trim().length === 0)
+          return of({ id: '', status: 200, message: '', data: [] } as ApiResponse<Account[]>);
+
+        return this.accountService.filterAccount("account_email", textFilter);
+      }),
+      takeUntil(this.destroyInput$)
+    ).subscribe({
+      next: (results: ApiResponse<Account[]>) => {
+        this.accounts.set(results.data);
+      },
+      error: (err) => console.error('Error al filtrar:', err)
+    })
+
   }
 
   private _getFormErrorMessage(): string[] {
@@ -79,6 +104,15 @@ export class OrderRegisterForm implements OnInit {
       severity: severity,
       detail: message
     })
+  }
+
+  onFilterChange(event: SelectFilterEvent): void {
+    this.filterAccountInput$.next(event.filter);
+  }
+
+  ngOnDestroy() : void {
+    this.destroyInput$.next();
+    this.destroyInput$.complete();
   }
 
   onSaveOrder() {

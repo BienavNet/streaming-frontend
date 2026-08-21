@@ -8,9 +8,9 @@
                     <label for="account">Account</label>
                 </p-floatlabel> -->
                 <p-floatlabel variant="on" class="w-full">
-                    <p-select [options]="this.page().content" optionValue="id" optionLabel="email"
+                    <p-select [options]="this.accounts()" optionValue="id" optionLabel="email"
                         inputId="account" [filter]="true" filterBy="email" [showClear]="true"
-                        class="w-full" appendTo="body" [formField]="$any(this.registerForm.account)">
+                        class="w-full" appendTo="body" [formField]="$any(this.registerForm.account)" (onFilter)="this.onFilterChange($event)" >
                         <ng-template #selectedItem let-selectedOption>
                             <div class="flex items-center gap-2">
                                 <div>{{ selectedOption.email }} - {{ selectedOption.platformName }}</div>

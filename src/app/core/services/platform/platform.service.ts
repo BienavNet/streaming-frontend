@@ -12,6 +12,11 @@ export class PlatformService {
 
     private readonly defaultError = defaultApiError;
 
+    private defineCatchError = ((error: HttpErrorResponse) => {
+        const apiError: ApiError = error.error || this.defaultError
+        return throwError(() => apiError);
+    })
+
 
     private _platforms = signal<Platform[]>([]);
     public platforms = this._platforms.asReadonly();
@@ -58,15 +63,23 @@ export class PlatformService {
     }
 
     deletePlatform(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`)
+        return this.http.delete<void>(`${this.apiUrl}/${id}`)
+                .pipe(
+                    tap(() => {
+                        this._platforms.update(oldList => oldList.filter(p => p.id !== id));
+                    }),
+                    catchError((error: HttpErrorResponse) => {
+                        const apiError = error.error || this.defaultError;
+                        return throwError(() => apiError);
+                    })
+                );
+    }
+
+    filterPlatform(field: string, criteria: string): Observable<ApiResponse<Platform[]>> {
+        return this.http.get<ApiResponse<Platform[]>>(`${this.apiUrl}/filter/${field}/${criteria}`)
             .pipe(
-                tap(() => {
-                    this._platforms.update(oldList => oldList.filter(p => p.id !== id));
-                }),
-                catchError((error: HttpErrorResponse) => {
-                    const apiError = error.error || this.defaultError;
-                    return throwError(() => apiError);
-                })
-            );
-}
+                map(response => response),
+                catchError(this.defineCatchError)
+            )
+    }
 }

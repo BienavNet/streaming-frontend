@@ -1,0 +1,24 @@
+<div class="admin-bar w-full h-1/12 flex justify-between items-center" [class]="isLateralMenuOpen() ? 'active' : ''">
+    <div class="lateral-icon ml-5" (click)="changeStateLateralMenu()">
+        <i class="pi pi-bars" style="font-size: 1.2rem;"></i>
+    </div>
+    <div class="notification-icon mr-10">
+        <i class="pi pi-bell" style="font-size: 1.2rem;"></i>
+    </div>
+</div>
+<div class="content w-full h-11/12">
+    @switch (this.currentTab()) {
+    @case ("platforms") {
+    <app-platform />
+    }
+    @case ("accounts") {
+    <app-account />
+    }
+    @case ("orders") {
+    <app-order />
+    }
+    @default {
+    <span>Esta parte esta en construccion.</span>
+    }
+    }
+</div>

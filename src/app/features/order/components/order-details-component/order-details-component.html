@@ -1,5 +1,5 @@
 <p-dialog 
-    header="Account Details" 
+    header="Order Details" 
     [draggable]="false" 
     [modal]="true" 
     [visible]="true" 
@@ -14,13 +14,9 @@
     <ng-template #header>
         <div class="w-full flex justify-between items-center px-4">
             <div>
-                <span class="font-bold text-2xl">Account Details</span>
+                <span class="font-bold text-2xl">Order Details</span>
             </div>
             <div class="card flex justify-center">
-                <!-- <p-togglebutton onLabel="Editing" offLabel="Edit" offIcon="pi pi-pencil" [onIcon]="'pi pi-file-edit'" class="w-30" ariaLabel="Edit account" size="small" [(ngModule)]="this.isEditingButton" /> -->
-                <!-- <p-togglebutton [(ngModel)]="isEditingButton" onLabel="Cancel" offLabel="Edit" offIcon="pi pi-file-edit"
-                    [onIcon]="'pi pi-times-circle'" class="w-30" ariaLabel="Edit account" size="small"
-                    (onChange)="this.onChangeIsEditingButton()" /> -->
             </div>
         </div>
     </ng-template>
@@ -30,34 +26,20 @@
         @if (!orderDetails()) {
             <span>No order details to show.</span>
         } @else {
-            <span class="block mb-1 font-semibold">Details</span>
-            <div class="card gap-2 w-full flex flex-col items-center justify-between">
-                <p-message severity="secondary"><b>Account</b>: {{orderDetails()?.accountEmail}}</p-message>
-                <p-message severity="secondary">Account</p-message>
-                <p-message severity="secondary">Account</p-message>
-                <p-message severity="secondary">Account</p-message>
-                <p-message severity="secondary">Account</p-message>
-                <p-message severity="secondary">Account</p-message>
-                <p-message severity="secondary">Account</p-message>
-                <p-message severity="secondary">Account</p-message>
-                <p-message severity="secondary">Account</p-message>         
+            <div class="card gap-2 w-full flex flex-col items-start justify-between">
+                <p-message severity="secondary" class="w-full"><b>Order Id: </b>{{orderDetails()?.id}}</p-message>
+                <p-message severity="secondary" class="w-full"><b>Account Email: </b>{{orderDetails()?.accountEmail}}</p-message>
+                <p-message severity="secondary" class="w-full"><b>Buy Date: </b>{{orderDetails()?.buyDate}}</p-message>
+                <p-message severity="secondary" class="w-full"><b>Finish Date: </b>{{orderDetails()?.finishDate}}</p-message>
+                <p-message severity="secondary" class="w-full platform-container" id="platform-container"><b>Platform: </b> {{orderDetails()?.platformName}}</p-message>
+                <p-message severity="secondary" class="w-full"><b>Plan Acquired: </b>{{orderDetails()?.plan}}</p-message>
+                <p-message severity="secondary" class="w-full"><b>Order Type: </b>{{orderDetails()?.orderType}}</p-message>
+                @if (orderDetails()?.orderType !== "full") {
+                    <p-message severity="secondary" class="w-full"><b>Profiles Acquired: </b>{{orderDetails()?.profileAmount}}</p-message>
+                }
+                <p-message severity="secondary" class="w-full"><b>Total Paid: </b>${{orderDetails()?.paymentAmount}}</p-message>
             </div>
         }
-
-        <!-- <div class="card gap-2 w-full flex flex-row items-center justify-between">
-            <p-iftalabel class="w-11/12 self-start">
-                <input pInputText id="password" autocomplete="off"
-                    class="w-full mb-1" />
-                <label for="password">Password</label>
-            </p-iftalabel>
-            <p-button size="large" variant="outlined"><i class="pi pi-clone" pButtonIcon
-                    ></i></p-button>
-        </div>
-        <p-iftalabel>
-            <input pInputText id="registeredAt" autocomplete="off" disabled
-                class="w-full mb-1" />
-            <label for="registeredAt">Registered At</label>
-        </p-iftalabel> -->
 
     </div>
 

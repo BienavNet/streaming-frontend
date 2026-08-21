@@ -5,6 +5,7 @@ import { ApiError, ApiResponse, defaultApiError } from '../../models/apiResponse
 import { OrderDetails, OrderRegister } from '../../models/order.model';
 import { catchError, map, Observable, tap, throwError } from 'rxjs';
 import { Order } from '../../models/order.model';
+import { Pagination } from '../../models/paginationResponse.model';
 
 
 @Service()
@@ -13,24 +14,48 @@ export class OrderService {
     private http = inject(HttpClient);
     private apiUrl = `${environment.api_base_url}/order`;
 
+    private readonly PAGE = 0;
+    private readonly OFFSET = 10;
+
     private readonly defaultError = defaultApiError;
 
-    private _orders = signal<OrderDetails[]>([]);
+    private _pagination = signal<Pagination<OrderDetails[]>>({
+        content: [],
+        totalElements: 0,
+        totalPages: 0,
+        currentSize: 0
+    })
 
-    orders = this._orders.asReadonly();
+    // private _orders = signal<OrderDetails[]>([]);
+    // orders = this._orders.asReadonly();
+
+    page = this._pagination.asReadonly();
+
 
     private defineCatchError = ((error: HttpErrorResponse) => {
         const apiError: ApiError = error.error || this.defaultError
         return throwError(() => apiError);
     })
 
-    loadOrders(): Observable<OrderDetails[]> {
-        return this.http.get<ApiResponse<OrderDetails[]>>(`${this.apiUrl}/orders`)
-                .pipe(
-                    map(response => response.data as OrderDetails[]),
-                    tap(data => this._orders.set(data)),
-                    catchError(this.defineCatchError)
-                )
+    loadPage(page?: number, offset?: number) : Observable<void> {
+        if (!page)
+            page = this.PAGE
+        if (!offset)
+            offset = this.OFFSET
+
+        return this.http.get<ApiResponse<Pagination<OrderDetails[]>>>(`${this.apiUrl}/orders/${page}/${offset}`)
+            .pipe(
+                map(response => response.data as Pagination<OrderDetails[]>),
+                tap(data => {
+                    this._pagination.set({
+                        ...data,
+                        currentSize: data.content.length < offset ? data.content.length : offset
+                    })
+                }),
+                map(() => {}),
+                catchError(this.defineCatchError)
+            )
+
     }
 
     saveOrder(order: OrderRegister) : Observable<string> {
