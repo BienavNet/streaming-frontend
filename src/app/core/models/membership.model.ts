@@ -15,3 +15,10 @@ export interface RegisterMembership {
     membershipBuyDate: Date;
     membershipExpireDate: Date;
 }
+
+export interface UpdateMembership {
+  isFreeTrial: boolean;
+  membershipBuyDate: Date;
+  membershipExpireDate: Date;
+  membershipConfigId: string;
+}

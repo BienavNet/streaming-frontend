@@ -1,27 +1,20 @@
-<div class="w-full h-full card flex justify-center items-center">
-    <p-confirmdialog />
-    <p-panel class="w-5/6 h-11/12 flex p-8 text-xl">
+<!-- <div class="w-full h-full card flex justify-center items-center"> -->
+<p-confirmdialog />
+<div class="h-full card grid grid-cols-1 grid-rows-1 p-3 justify-items-center items-center">
+    <p-panel class="w-11/12 h-11/12 p-8 text-xl">
         <ng-template #header>
-            <div class="w-full flex justify-between items-center px-4">
+            <div class="w-full flex justify-start items-center gap-10 p">
                 <div>
                     <span class="font-bold text-3xl">Accounts</span>
                 </div>
-                <p-button size="small" class="flex items-center justify-start gap-2 whitespace-nowrap" label="Add Account"
-                    icon="pi pi-plus" severity="secondary" (click)="this.onRegisterFormModalClick()" />
+                <p-button size="small" class="flex items-center justify-start gap-2 whitespace-nowrap"
+                    label="Add Account" icon="pi pi-plus" severity="secondary"
+                    (click)="this.onRegisterFormModalClick()" />
             </div>
         </ng-template>
-        <p-table 
-            [value]="page().content" 
-            class="w-full" 
-            [loading]="isLoading()" 
-            [scrollable]="true"
-            [paginator]="true"
-            [rows]="page().currentSize"
-            [totalRecords]="page().totalPages ? page().totalPages : 1"
-            sortField="email"
-            (onPage)="onPaginationOccurs($event)"
-            [rowsPerPageOptions]="[5, 10, 20]"
-            >
+        <p-table [value]="page().content" [loading]="isLoading()" [scrollable]="true" [paginator]="true"
+            [rows]="page().currentSize" [totalRecords]="page().totalPages ? page().totalPages : 1" sortField="email"
+            (onPage)="onPaginationOccurs($event)" [rowsPerPageOptions]="[5, 10, 20]">
             <ng-template #header>
                 <tr>
                     <th>ID</th>
@@ -37,7 +30,8 @@
                     <td>{{account.email}}</td>
                     <td>{{account.platformName}}</td>
                     <td>
-                        <p-button variant="text" severity="info" label="See Membership" [raised]="true" size="small" (click)="this.onMembershipModalClick(account.id)">
+                        <p-button variant="text" severity="info" label="See Membership" [raised]="true" size="small"
+                            (click)="this.onMembershipModalClick(account.id)">
                             <!-- <p-tag value="See Membership" severity="info" /> -->
                         </p-button>
                     </td>
@@ -48,7 +42,8 @@
                                 (click)="this.onClickAccountDetails(account.id)" />
 
                             <p-button size="small" class="flex items-center justify-start gap-2 whitespace-nowrap"
-                                label="Delete" icon="pi pi-trash" severity="danger" (click)="this.onClickDeleteBtn($event, account.id)" />
+                                label="Delete" icon="pi pi-trash" severity="danger"
+                                (click)="this.onClickDeleteBtn($event, account.id)" />
 
                         </div>
                     </td>
@@ -63,11 +58,12 @@
         }
 
         @if (this.accountDetailsId()) {
-            <app-account-details (onCloseModal)="this.onCloseAccountDetailsModal()" [accountId]="accountDetailsId()!" />
+        <app-account-details (onCloseModal)="this.onCloseAccountDetailsModal()" [accountId]="accountDetailsId()!" />
         }
 
         @if (this.membershipIdToQuery()) {
-            <app-membership (onCloseModal)="this.onMembershipModalClick(undefined)" [membershipId]="this.membershipIdToQuery()!" />
+        <app-membership (onCloseModal)="this.onMembershipModalClick(undefined)"
+            [accountId]="this.membershipIdToQuery()!" />
         }
 
 

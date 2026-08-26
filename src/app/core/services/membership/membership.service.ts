@@ -2,8 +2,8 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
 import { environment } from '../../../../environments/environment.development';
 import { ApiError, ApiResponse, defaultApiError } from '../../models/apiResponse';
-import { catchError, map, Observable, throwError } from 'rxjs';
-import { MembershipDetails, RegisterMembership } from '../../models/membership.model';
+import { catchError, map, Observable, tap, throwError } from 'rxjs';
+import { MembershipDetails, RegisterMembership, UpdateMembership } from '../../models/membership.model';
 
 @Service()
 export class MembershipService {
@@ -29,6 +29,15 @@ export class MembershipService {
         return this.http.get<ApiResponse<MembershipDetails>>(`${this.apiUrl}/account/${id}`)
                 .pipe(
                     map( response => response.data as MembershipDetails),
+                    catchError(this.defineCatchError)
+                )
+    }
+
+    udpateMembership(id: string, data: UpdateMembership) : Observable<void> {
+        return this.http.put<ApiResponse<string>>(`${this.apiUrl}/${id}`, data)
+                .pipe(
+                    // map(response => response.data as string),
+                    map(() => {}),
                     catchError(this.defineCatchError)
                 )
     }

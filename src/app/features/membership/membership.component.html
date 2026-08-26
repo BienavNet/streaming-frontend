@@ -1,5 +1,7 @@
 <p-panel>
-    <p-dialog [closable]="true" [closeOnEscape]="true" [modal]="true" [visible]="true" [draggable]="false" styleClass="w-xl" (onHide)="this.closeModal()">
+    <!-- <p-dialog [closable]="true" [closeOnEscape]="true" [modal]="true" [visible]="true" [draggable]="false" styleClass="w-2xl h-96 p-5" (onHide)="this.closeModal()"> -->
+        <p-dialog [draggable]="false" [modal]="true" [visible]="true" styleClass="w-xl"
+            [closable]="true" [blockScroll]="true" [autofocus]="true" [contentStyle]="{'overflow': 'visible'}" styleClass="w-2xl h-96 p-5" [closeOnEscape]="true" (onHide)="this.closeModal()">
         <ng-template #header>
             <div class="w-full flex justify-between items-center px-4 ">
                 <div>
@@ -11,12 +13,18 @@
                     [label]="this.isRegisterFormActive() ? 'Cancel' : 'Add Membership'"
                     [icon]="this.isRegisterFormActive() ? 'pi pi-times-circle' : 'pi pi-plus'" severity="secondary"
                     (click)="this.onClickRegisterBtn()" />
+                } @else {
+                    <div class="flex-col gap-20">
+                        <p-button size="small" class="flex items-center justify-start gap-2 whitespace-nowrap" 
+                        [label]="this.isUpdateBtnPressed() ? 'Go Back' : 'Update Membership'" severity="secondary"
+                        [icon]="this.isUpdateBtnPressed() ? 'pi pi-arrow-circle-left' : 'pi pi-user-edit'" (click)="this.onUpdateClickBtn()" />
+                    </div>
                 }
                 
             </div>
         </ng-template>
 
-        <div class="flex justify-center items-center">
+        <div class="w-full h-full flex justify-center items-center">
             @if (!this.membershipDetails()) {
                 @if (this.isRegisterFormActive()) {
                     <app-register-membership-form-component />
@@ -25,7 +33,13 @@
                 }
     
             } @else {
-                <app-membership-card-component [membership]="this.membershipDetails()!" />
+
+                @if (this.isUpdateBtnPressed()) {
+                    <app-update-membership-component [membershipToUpdate]="this.membershipDetails()!" (onClose)="this.onUpdateClickBtn()" />
+                } @else { 
+                    <app-membership-card-component [membership]="this.membershipDetails()!" />
+                }
+
                 
             }
         </div>

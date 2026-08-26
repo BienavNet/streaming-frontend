@@ -1,0 +1,38 @@
+<div class="card w-80 h-full">
+    <div class="gap-3 flex items-center flex-col mt-2">
+        <p-floatlabel variant="on" class="w-full">
+            <p-select [formField]="$any(this.updateForm.membershipConfigId)"
+                [options]="this.plans()" optionValue="id" optionLabel="plan" [filter]="true" filterBy="plan"
+                [showClear]="true" inputId="plan" class="w-full" appendTo="body">
+                <ng-template #selectedItem let-selectedOption>
+                    <div class="flex items-center gap-2">
+                        <div>{{ selectedOption.plan }}</div>
+                    </div>
+                </ng-template>
+                <ng-template let-plan #item>
+                    <div class="flex items-center gap-2">
+                        <div>{{ plan.plan }}</div>
+                    </div>
+                </ng-template>
+            </p-select>
+            <label for="plan">Plan</label>
+        </p-floatlabel>
+        <p-floatlabel variant="on" class="w-full">
+            <p-datepicker id="buyMembershipDate" dateFormat="yy-mm-dd" dataType="string" class="w-full"
+                [formField]="$any(this.updateForm.membershipBuyDate)" />
+            <label for="buyMembershipDate">Buy or Renew Membership Date</label>
+        </p-floatlabel>
+        <p-floatlabel variant="on" class="w-full">
+            <p-datepicker id="expireMembershipDate" dateFormat="yy-mm-dd" dataType="string" class="w-full"
+                [formField]="$any(this.updateForm.membershipExpireDate)" />
+            <label for="expireMembershipDate">Expire Membership Date</label>
+        </p-floatlabel>
+        <div class="w-full">
+            <p-checkbox [binary]="true" inputId="addPayment" class="w-full" [formField]="this.updateForm.isFreeTrial" />
+            <label for="addPayment" class="ml-2">Add new payment</label>
+        </div>
+        <div class="w-full flex justify-end gap-2 mt-3">
+            <p-button label="Update" (click)="this.updateBtnClick()" />
+        </div>
+    </div>
+</div>

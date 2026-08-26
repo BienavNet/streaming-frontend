@@ -7,10 +7,11 @@ import { MembershipDetails } from '../../core/models/membership.model';
 import { RegisterMembershipFormComponent } from "./components/register-membership-form-component/register-membership-form-component";
 
 import { MembershipCardComponent } from './components/membership-card-component/membership-card-component';
+import { UpdateMembershipComponent } from "./components/update-membership-component/update-membership-component";
 
 @Component({
   selector: 'app-membership',
-  imports: [PanelModule, DialogModule, ButtonModule, RegisterMembershipFormComponent, MembershipCardComponent],
+  imports: [PanelModule, DialogModule, ButtonModule, RegisterMembershipFormComponent, MembershipCardComponent, UpdateMembershipComponent],
   templateUrl: './membership.component.html',
   styleUrl: './membership.component.css',
 })
@@ -22,8 +23,10 @@ export class MembershipComponent implements OnInit {
   membershipDetails = signal<MembershipDetails | null>(null);
   
   isRegisterFormActive = signal<boolean>(false);
-  membershipId = input.required<string>();
+  isUpdateBtnPressed = signal<boolean>(false);
+  accountId = input.required<string>();
   onCloseModal = output<undefined>();
+  
   
   ngOnInit(): void {
     this._loadMembership();
@@ -31,8 +34,8 @@ export class MembershipComponent implements OnInit {
 
   private _loadMembership() {
     this.isLoading.set(true);
-
-    const sub = this.membershipService.getMembership(this.membershipId())
+    
+    const sub = this.membershipService.getMembership(this.accountId())
         .subscribe({
           next: (response) => {
             this.membershipDetails.set(response);
@@ -53,5 +56,9 @@ export class MembershipComponent implements OnInit {
   
   closeModal() : void {
     this.onCloseModal.emit(undefined);
+  }
+
+  onUpdateClickBtn(): void {
+    this.isUpdateBtnPressed.update(old => !old);
   }
 }
