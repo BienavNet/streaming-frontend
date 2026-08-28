@@ -10,6 +10,7 @@ import { ApiError } from '../../../../core/models/apiResponse';
 @Component({
   selector: 'app-plan-card',
   imports: [CardModule, ButtonModule, ConfirmDialogModule],
+  providers: [ConfirmationService],
   templateUrl: './plan-card.html',
   styleUrl: './plan-card.css',
 })

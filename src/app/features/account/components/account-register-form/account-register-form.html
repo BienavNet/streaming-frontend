@@ -2,8 +2,18 @@
     <div class="card">
         <!-- <p-panel header="Register Platform Form" class="w-xl h-3/5 flex p-8 text-xl"> -->
         <p-dialog header="Add new account" [draggable]="false" [modal]="true" [visible]="true" styleClass="w-xl"
-            [closable]="false" [blockScroll]="true" [autofocus]="true" [contentStyle]="{'overflow': 'visible'}">
-            <div class="gap-2 flex items-center flex-col mt-1">
+            [closable]="true" [blockScroll]="true" [autofocus]="true" [contentStyle]="{'overflow': 'visible'}" (onHide)="this.onCloseModal.emit()" closeOnEscape="true">
+            <ng-template #header>
+                <div class="w-full flex flex-col justify-start items-start">
+                    <div class="flex flex-row justify-center items-center gap-10">
+                        <span class="font-bold text-2xl">Register Account Form</span>
+                    </div>
+                    <div>
+                        <span class="text-sm italic">You can register new accounts.</span>
+                    </div>
+                </div>
+            </ng-template>
+            <div class="gap-2 flex items-center flex-col">
                 <p-floatlabel variant="on" class="w-full">
                     <input pInputText id="email" [formField]="this.registerForm.email" autocomplete="off"
                         class="w-full" />
@@ -15,8 +25,8 @@
                     <label for="password">Password</label>
                 </p-floatlabel>
 
-                <div class="card w-full flex justify-around items-center flex-row gap-2">
-                    <div class="w-full flex flex-col justify-end items-start mt-6 gap-0.5">
+                <div class="card w-full flex justify-center items-center flex-row gap-2">
+                    <div class="w-full flex flex-col justify-center items-start mt-6 gap-0.5">
                         <p-floatlabel variant="on" class="w-full">
                             <p-select [formField]="$any(this.registerForm.payment)"
                                 (onFilter)="this.onPaymentFilter($event)" [options]="this.payments()" optionValue="id"
@@ -37,7 +47,8 @@
                         </p-floatlabel>
                         <div>
                             <p-checkbox [value]="this.addNewPaymentIsClicked()" [binary]="true"
-                                (onChange)="onChangePaymentSelect()" inputId="addPayment" [disabled]="this.registerForm.payment().controlValue() ? true:false" />
+                                (onChange)="onChangePaymentSelect()" inputId="addPayment"
+                                [disabled]="this.registerForm.payment().controlValue() ? true:false" />
                             <label for="addPayment" class="ml-2">Add new payment</label>
                         </div>
                     </div>
@@ -96,14 +107,9 @@
                     </p-floatlabel>
                 </div>
                 }
-
-                <!-- <div class="card w-full flex justify-end items-center flex-row gap-2">
-                    <label for="freeTrial">Is free trial?</label>
-                    <p-checkbox [binary]="true" inputId="freeTrial" [formField]="this.registerForm.isFreeTrial" />
-                </div> -->
+                
             </div>
             <div class="flex justify-end gap-2 mt-3">
-                <p-button label="Cancel" severity="secondary" (click)="this.onCloseModal.emit()" />
                 <p-button label="Save" (click)="this.saveAccountOnClick()" />
             </div>
         </p-dialog>

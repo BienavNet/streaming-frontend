@@ -1,21 +1,26 @@
-<div class="card"> 
-    <p-dialog header="Edit Platform" [draggable]="false" [modal]="true" [visible]="visible" styleClass="w-80" class="" [closable]="false">
+<div class="card">
+    <p-dialog [draggable]="false" [modal]="true" [visible]="visible" styleClass="w-xl" class="" [closable]="true" closeOnEscape="true" (onHide)="this.onCloseModal.emit()" >
+        <ng-template #header>
+            <div class="flex flex-col gap-2 mb-3">
+                <span class="text-2xl font-bold">Edit Form</span>
+                <span class="text-sm italic">Here you can edit all details about a platform registered.</span>
+            </div>
+        </ng-template>
         <div class="gap-2 flex items-center flex-col">
-            <p-floatlabel variant="in">
-                <input pInputText id="name" [formField]="editForm.name" autocomplete="off" />
+            <p-floatlabel variant="in" class="w-9/12">
+                <input pInputText id="name" [formField]="editForm.name" autocomplete="off" class="w-full" />
                 <label for="name">Name</label>
             </p-floatlabel>
-            <p-floatlabel variant="in">
-                <input pInputText id="link" [formField]="editForm.link" autocomplete="off" />
+            <p-floatlabel variant="in" class="w-9/12">
+                <input pInputText id="link" [formField]="editForm.link" autocomplete="off" class="w-full" />
                 <label for="link">Link</label>
             </p-floatlabel>
-            <p-floatlabel variant="in">
-                <input pInputText id="icon" [formField]="editForm.icon" autocomplete="off" />
+            <p-floatlabel variant="in" class="w-9/12">
+                <input pInputText id="icon" [formField]="editForm.icon" autocomplete="off" class="w-full" />
                 <label for="icon">Icon</label>
             </p-floatlabel>
         </div>
-        <div class="flex justify-end gap-2 mt-3">
-            <p-button label="Cancel" severity="secondary" (click)="onCloseModal.emit()" />
+        <div class="flex justify-end mr-5 mt-3">
             <p-button label="Save" (click)="executeSaveOnClick()" />
         </div>
     </p-dialog>

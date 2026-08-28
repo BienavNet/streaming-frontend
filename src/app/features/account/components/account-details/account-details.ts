@@ -15,11 +15,14 @@ import { AccountService } from '../../../../core/services/account/account.servic
 import { Account, AccountUpdate } from '../../../../core/models/account.model';
 
 import { DatePickerModule } from "primeng/datepicker";
-import { SelectModule } from 'primeng/select';
+import { SelectFilterEvent, SelectModule } from 'primeng/select';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { PlatformService } from '../../../../core/services/platform/platform.service';
 import { PaymentService } from '../../../../core/services/payment/payment.service';
-import { ApiError } from '../../../../core/models/apiResponse';
+import { ApiError, ApiResponse } from '../../../../core/models/apiResponse';
+import { debounceTime, distinctUntilChanged, of, Subject, switchMap, takeUntil } from 'rxjs';
+import { Platform } from '../../../../core/models/platform.model';
+import { Payment } from '../../../../core/models/payment.model';
 
 @Component({
   selector: 'app-account-details',
@@ -34,6 +37,22 @@ export class AccountDetails implements OnInit {
   private accountService = inject(AccountService);
   private platformService = inject(PlatformService);
   private paymentService = inject(PaymentService);
+  // Form Definition
+  private formModel = signal<AccountUpdate>({
+    email: "",
+    password: "",
+    payment: "",
+    platform: ""
+  })
+
+  //Load filter debounced
+  private filterPlatformInput$ = new Subject<string>();
+  private filterPaymentInput$ = new Subject<string>();
+  private destroy$ = new Subject<void>();
+
+  //Load platforms signals
+  platforms = signal<Platform[]>([]);
+  payments = signal<Payment[]>([]);
 
   formUpdateHasChanged = signal<boolean>(true)
 
@@ -46,13 +65,6 @@ export class AccountDetails implements OnInit {
   onCloseModal = output<void>()
   accountId = input.required<string>()
 
-  // Form Definition
-  private formModel = signal<AccountUpdate>({
-    email: "",
-    password: "",
-    payment: "",
-    platform: ""
-  })
 
 
   editForm = form(this.formModel, (schemaPath) => {
@@ -66,17 +78,58 @@ export class AccountDetails implements OnInit {
 
   saveEditBtnDisabled = computed<boolean>(() => this.editForm().dirty() && this.editForm().valid())
 
+  ngOnInit() {
+    this._loadInfoWhenComponentIsReady();
 
-  //Data bydefault
-  platforms = computed(this.platformService.platforms);
-  payments = computed(this.paymentService.payments);
+    //Preload debounced filter
+    this._loadDebouncedFilterForPlatform();
+    this._loadDebouncedFilterForPayment();
+    
+  }
+
+  private _loadDebouncedFilterForPlatform(): void {
+    this.filterPlatformInput$.pipe(
+      debounceTime(400),
+      distinctUntilChanged(),
+      switchMap((textFilter: string) => {
+        if (!textFilter || textFilter.trim().length === 0) {
+          return of({ id: '', status: 200, message: '', data: [] } as ApiResponse<Platform[]>);
+        }
+
+        return this.platformService.filterPlatform("platform_name", textFilter);
+      }),
+      takeUntil(this.destroy$)
+    ).subscribe({
+      next: (resultados: ApiResponse<Platform[]>) => {
+        this.platforms.set(resultados.data);
+      },
+      error: (err) => console.error('Error al filtrar:', err)
+    });
+  }
+
+  private _loadDebouncedFilterForPayment(): void {
+    this.filterPaymentInput$.pipe(
+      debounceTime(400),
+      distinctUntilChanged(),
+      switchMap((textFilter: string) => {
+        if (!textFilter || textFilter.trim().length === 0) {
+          return of({ id: '', status: 200, message: '', data: [] } as ApiResponse<Payment[]>);
+        }
+
+        return this.paymentService.filterPayment("payment_number", textFilter);
+      }),
+      takeUntil(this.destroy$)
+    ).subscribe({
+      next: (results: ApiResponse<Payment[]>) => {
+        this.payments.set(results.data);
+      },
+      error: (err) => console.error('Error al filtrar:', err)
+    });
+  }
 
   private _mapAccountToNewAccountUpdate(account: Account) {
     return {
       email: account.email,
-      // isFreeTrial: account.freeTrial ? 'yes' : 'no',
-      // membershipBuyDate: account.membershipBuyDate,
-      // membershipExpireDate: account.membershipExpireDate,
       password: account.password,
       payment: account.payment.id,
       platform: account.platform.id
@@ -91,6 +144,8 @@ export class AccountDetails implements OnInit {
         this.account.set(account);
         this.isLoading.set(false);
         this.formModel.set(this._mapAccountToNewAccountUpdate(account))
+        this.platforms.update(old => [...old, account.platform])
+        this.payments.update(old => [...old, account.payment])
       },
       error: (e) => {
         this.isLoading.set(false);
@@ -113,20 +168,24 @@ export class AccountDetails implements OnInit {
 
     (Object.keys(currentForm) as Array<keyof AccountUpdate>).forEach(key => {
       const field = this.editForm[key];
-      if(field && field().dirty && field().dirty() && currentForm[key] === originalMapped[key])
+      if (field && field().dirty && field().dirty() && currentForm[key] === originalMapped[key])
         this.editForm[key]().reset();
     })
 
-  }
-
-  ngOnInit() {
-    this._loadInfoWhenComponentIsReady();
   }
 
   constructor() {
     effect(() => {
       this._checkAndPristineForm();
     })
+  }
+
+  onPaymentFilter(event: SelectFilterEvent): void {
+    this.filterPaymentInput$.next(event.filter);
+  }
+
+  onPlatformFilter(event: SelectFilterEvent): void {
+    this.filterPlatformInput$.next(event.filter);
   }
 
   copyText(text: any) {
@@ -142,12 +201,12 @@ export class AccountDetails implements OnInit {
     if (this.isEditingButton()) {
       const platformSub = this.platformService.loadPlatforms().subscribe({
         error: () => {
-          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error loading platforms.'});
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error loading platforms.' });
         },
       });
       const paymentSub = this.paymentService.loadPayments().subscribe({
         error: () => {
-          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error loading payments.'});
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error loading payments.' });
         },
       });
       return () => {
@@ -163,12 +222,12 @@ export class AccountDetails implements OnInit {
 
   onClickSaveButton() {
     const partialUpdate: Partial<AccountUpdate> = {};
-    
+
     (Object.keys(this.formModel()) as Array<keyof AccountUpdate>).forEach(key => {
 
       const fieldState = this.editForm[key];
 
-      if(fieldState && fieldState() && fieldState().dirty())
+      if (fieldState && fieldState() && fieldState().dirty())
         (partialUpdate as any)[key] = this.formModel()[key];
     })
 
@@ -184,12 +243,12 @@ export class AccountDetails implements OnInit {
         this.onCloseModal.emit()
       },
       error: (e) => {
-          this.isLoading.set(false);
-          this.errorMessage.set("An error has occurred when trying to retrieve data from backend.");
-          const backendError = e as ApiError
+        this.isLoading.set(false);
+        this.errorMessage.set("An error has occurred when trying to retrieve data from backend.");
+        const backendError = e as ApiError
 
-          this.messageService.add({ severity: 'error', summary: `${backendError?.code} Error`, detail:  backendError?.message});
-        }
+        this.messageService.add({ severity: 'error', summary: `${backendError?.code} Error`, detail: backendError?.message });
+      }
     })
   }
 

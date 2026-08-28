@@ -1,24 +1,31 @@
 <form>
     <div class="card">
+
+
         <!-- <p-panel header="Register Platform Form" class="w-xl h-3/5 flex p-8 text-xl"> -->
-        <p-dialog header="Register Form" [draggable]="false" [modal]="true" [visible]="true" styleClass="w-80" class=""
-            [closable]="false">
-            <div class="gap-2 flex items-center flex-col">
-                <p-floatlabel variant="in">
-                    <input pInputText id="name" [formField]="this.registerForm.name" autocomplete="off" />
+        <p-dialog [draggable]="false" [modal]="true" [visible]="true" styleClass="w-xl" [closable]="true" (onHide)="this.onCloseModal.emit()" closeOnEscape="true">
+            <ng-template #header>
+                <div class="flex flex-col gap-2 mb-3">
+                    <span class="text-2xl font-bold">Register Form</span>
+                    <span class="text-sm italic">With this form you can register new platform.</span>
+                </div>
+            </ng-template>
+
+            <div class="gap-2 flex items-center flex-col mt-3">
+                <p-floatlabel variant="on" class="w-9/12">
+                    <input pInputText id="name" [formField]="this.registerForm.name" autocomplete="off" class="w-full" />
                     <label for="name">Name</label>
                 </p-floatlabel>
-                <p-floatlabel variant="in">
-                    <input pInputText id="link" [formField]="this.registerForm.link" autocomplete="off" />
+                <p-floatlabel variant="on" class="w-9/12">
+                    <input pInputText id="link" [formField]="this.registerForm.link" autocomplete="off" class="w-full" />
                     <label for="link">Link</label>
                 </p-floatlabel>
-                <p-floatlabel variant="in">
-                    <input pInputText id="icon" [formField]="this.registerForm.icon" autocomplete="off" />
+                <p-floatlabel variant="on" class="w-9/12">
+                    <input pInputText id="icon" [formField]="this.registerForm.icon" autocomplete="off" class="w-full" />
                     <label for="icon">Icon</label>
                 </p-floatlabel>
             </div>
             <div class="flex justify-end gap-2 mt-3">
-                <p-button label="Cancel" severity="secondary" (click)="this.onCloseModal.emit()" />
                 <p-button label="Save" (click)="this.savePlatform()" />
             </div>
         </p-dialog>

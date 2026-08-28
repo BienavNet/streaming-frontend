@@ -3,15 +3,18 @@
     (onHide)="this.onCloseModal.emit()">
 
     <ng-template #header>
-        <div class="w-full flex justify-between items-center px-4">
-            <div>
+        <div>
+            <div class="w-full flex flex-row justify-start items-center gap-5 pl-5">
                 <span class="font-bold text-2xl">Account Details</span>
+                <div class="card flex justify-center">
+                    <!-- <p-togglebutton onLabel="Editing" offLabel="Edit" offIcon="pi pi-pencil" [onIcon]="'pi pi-file-edit'" class="w-30" ariaLabel="Edit account" size="small" [(ngModule)]="this.isEditingButton" /> -->
+                    <p-togglebutton [(ngModel)]="isEditingButton" onLabel="Cancel" offLabel="Edit" offIcon="pi pi-file-edit"
+                        [onIcon]="'pi pi-times-circle'" class="w-30" ariaLabel="Edit account" size="small"
+                        (onChange)="this.onChangeIsEditingButton()" />
+                </div>
             </div>
-            <div class="card flex justify-center">
-                <!-- <p-togglebutton onLabel="Editing" offLabel="Edit" offIcon="pi pi-pencil" [onIcon]="'pi pi-file-edit'" class="w-30" ariaLabel="Edit account" size="small" [(ngModule)]="this.isEditingButton" /> -->
-                <p-togglebutton [(ngModel)]="isEditingButton" onLabel="Cancel" offLabel="Edit" offIcon="pi pi-file-edit"
-                    [onIcon]="'pi pi-times-circle'" class="w-30" ariaLabel="Edit account" size="small"
-                    (onChange)="this.onChangeIsEditingButton()" />
+            <div>
+                <span class="text-sm italic pl-5">You are looking and you can updating all about account details.</span>
             </div>
         </div>
     </ng-template>
@@ -84,7 +87,7 @@
         <p-floatlabel variant="on" class="w-full">
             <p-select [formField]="$any(editForm.platform)" [options]="this.platforms()" optionValue="id"
                 inputId="platform" optionLabel="name" [filter]="true" filterBy="name" [showClear]="true" class="w-full"
-                appendTo="body">
+                appendTo="body" (onFilter)="this.onPlatformFilter($event)">
                 <ng-template #selectedItem let-selectedOption>
                     <div class="flex items-center gap-2">
                         <div>{{ selectedOption.name }}</div>
@@ -105,7 +108,7 @@
         <p-floatlabel variant="on" class="w-full">
             <p-select [formField]="$any(editForm.payment)" [options]="this.payments()" optionValue="id"
                 optionLabel="card" [filter]="true" filterBy="card" [showClear]="true" inputId="payment" class="w-full"
-                appendTo="body">
+                appendTo="body" (onFilter)="this.onPaymentFilter($event)">
                 <ng-template #selectedItem let-selectedOption>
                     <div class="flex items-center gap-2">
                         <div>{{ selectedOption.card }}</div>
