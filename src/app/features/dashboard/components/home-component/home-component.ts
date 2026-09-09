@@ -1,12 +1,40 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { CardModule } from 'primeng/card';
+import { DashboardService } from '../../../../core/services/dashboard/dashboard.service';
+import { DashboardData } from '../../../../core/models/dashboard.model';
+import { TableModule } from "primeng/table";
+
+import { AvatarModule } from 'primeng/avatar';
+import { AvatarGroupModule } from 'primeng/avatargroup';
 
 @Component({
   selector: 'app-home-component',
-  imports: [CardModule],
+  imports: [CardModule, TableModule, AvatarModule, AvatarGroupModule],
   templateUrl: './home-component.html',
   styleUrl: './home-component.css',
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
+    private dashboardService = inject(DashboardService);
+    
+    isLoading = signal<boolean>(false);
+    panelData = signal<DashboardData | null>(null);
 
+
+    ngOnInit(): void {
+        this._loadData();
+    }
+
+    private _loadData() {
+        this.isLoading.set(true);
+
+        const sub = this.dashboardService.loadData().subscribe({
+            next: (response) => {
+                this.isLoading.set(false);
+                this.panelData.set(response);
+            },
+            error: () => {
+                this.isLoading.set(false);
+            }
+        });
+    }
 }

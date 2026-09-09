@@ -198,24 +198,10 @@ export class AccountDetails implements OnInit {
 
 
   onChangeIsEditingButton() {
-    if (this.isEditingButton()) {
-      const platformSub = this.platformService.loadPlatforms().subscribe({
-        error: () => {
-          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error loading platforms.' });
-        },
-      });
-      const paymentSub = this.paymentService.loadPayments().subscribe({
-        error: () => {
-          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error loading payments.' });
-        },
-      });
-      return () => {
-        platformSub.unsubscribe()
-        paymentSub.unsubscribe()
-      }
+    if (!this.isEditingButton()) {
+      this.resetFormToOriginalState()
     }
 
-    this.resetFormToOriginalState()
     return
 
   }

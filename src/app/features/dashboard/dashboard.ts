@@ -13,7 +13,7 @@ import { ContentComponent } from './components/content-component/content-compone
 export class Dashboard {
   lateralMenuStatus = signal<boolean>(true);
 
-  currentTab = signal<string>("");
+  currentTab = signal<string>("home");
 
   setCurrentTab(tab : string) : void {
     this.currentTab.set(tab);

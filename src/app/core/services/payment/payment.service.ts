@@ -4,31 +4,51 @@ import { environment } from '../../../../environments/environment.development';
 import { ApiError, ApiResponse, defaultApiError } from '../../models/apiResponse';
 import { Payment, PaymentRegister } from '../../models/payment.model';
 import { catchError, map, Observable, tap, throwError } from 'rxjs';
+import { Pagination } from '../../models/paginationResponse.model';
 
 @Service()
 export class PaymentService {
     private http = inject(HttpClient);
     private apiUrl = `${environment.api_base_url}/payment`;
-    private defaultError = defaultApiError;
+    private readonly defaultError = defaultApiError;
 
-    
+    private readonly PAGE = 0;
+    private readonly OFFSET = 10;
+
+    private _pagination = signal<Pagination<Payment[]>>({
+        content: [],
+        totalElements: 0,
+        totalPages: 0,
+        currentSize: 0
+    })
+
+    page = this._pagination.asReadonly();
+
     private defineCatchError = ((error: HttpErrorResponse) => {
         const apiError: ApiError = error.error || this.defaultError
         return throwError(() => apiError);
     })
-    
-    private _payments = signal<Payment[]>([]);
-    public payments = this._payments.asReadonly();
 
-    loadPayments(): Observable<Payment[]> {
-        return this.http.get<ApiResponse<Payment[]>>(this.apiUrl)
+    loadPage(page?: number, offset?: number): Observable<void> {
+
+        if (!page)
+            page = this.PAGE
+        if (!offset)
+            offset = this.OFFSET
+
+
+        
+        return this.http.get<ApiResponse<Pagination<Payment[]>>>(`${this.apiUrl}/${page}/${offset}`)
             .pipe(
-                map(response => response.data as Payment[]),
-                tap(data => this._payments.set(data)),
-                catchError((error: HttpErrorResponse) => {
-                    const apiError: ApiError = error.error || this.defaultError
-                    return throwError(() => apiError);
-                })
+                map(response => response.data as Pagination<Payment[]>),
+                tap(data => {
+                    this._pagination.set({
+                        ...data,
+                        currentSize: data.content.length < offset ? data.content.length : offset
+                    })
+                }),
+                map( () => {}), 
+                catchError(this.defineCatchError)
             )
     }
 
@@ -37,10 +57,7 @@ export class PaymentService {
             .pipe(
                 map(response => response.data as Payment),
                 tap(data => data),
-                catchError((error: HttpErrorResponse) => {
-                    const apiError: ApiError = error.error || this.defaultError
-                    return throwError(() => apiError);
-                })
+                catchError(this.defineCatchError)
             )
     }
 
@@ -49,20 +66,14 @@ export class PaymentService {
             .pipe(
                 map(response => response.data as Payment),
                 tap(data => data),
-                catchError((error: HttpErrorResponse) => {
-                    const apiError: ApiError = error.error || this.defaultError
-                    return throwError(() => apiError);
-                })
+                catchError(this.defineCatchError)
             )
     }
 
     deletePayment(id: string): Observable<void> {
         return this.http.delete<void>(`${this.apiUrl}/${id}`)
             .pipe(
-                catchError((error: HttpErrorResponse) => {
-                    const apiError: ApiError = error.error || this.defaultError
-                    return throwError(() => apiError);
-                })
+                catchError(this.defineCatchError)
             )
     }
 

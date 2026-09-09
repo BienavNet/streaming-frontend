@@ -3,10 +3,11 @@ import { PlatformComponent } from '../../../platform/platform';
 import { AccountComponent } from '../../../account/account.component';
 import { OrderComponent } from '../../../order/order-component';
 import { HomeComponent } from "../home-component/home-component";
+import { PaymentComponent } from "../../../payment/payment-component";
 
 @Component({
   selector: 'app-content-component',
-  imports: [PlatformComponent, AccountComponent, OrderComponent, HomeComponent],
+  imports: [PlatformComponent, AccountComponent, OrderComponent, HomeComponent, PaymentComponent],
   templateUrl: './content-component.html',
   styleUrl: './content-component.css',
 })
