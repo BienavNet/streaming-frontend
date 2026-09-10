@@ -8,6 +8,7 @@ import { MessageService } from 'primeng/api';
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    MessageService,
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
     providePrimeNG({
@@ -17,7 +18,6 @@ export const appConfig: ApplicationConfig = {
           darkModeSelector: 'none'
         }
       },
-    }),
-    MessageService
+    })
   ]
 };

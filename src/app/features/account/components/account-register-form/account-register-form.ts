@@ -7,8 +7,8 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 import { PanelModule } from 'primeng/panel';
 import { ButtonModule } from 'primeng/button';
 import { DatePickerModule } from 'primeng/datepicker';
-import { CheckboxChangeEvent, CheckboxModule } from 'primeng/checkbox';
-import { SelectChangeEvent, SelectFilterEvent, SelectModule } from 'primeng/select';
+import { CheckboxModule } from 'primeng/checkbox';
+import { SelectFilterEvent, SelectModule } from 'primeng/select';
 
 import { Dialog } from "primeng/dialog";
 
@@ -90,8 +90,6 @@ export class AccountRegisterForm implements OnInit {
 
 
   ngOnInit(): void {
-    // this.platformService.loadPlatforms().subscribe()
-    // this.paymentService.loadPayments().subscribe()
     this._loadDebouncedFilterForPlatform();
     this._loadDebouncedFilterForPayment();
   }
@@ -115,15 +113,6 @@ export class AccountRegisterForm implements OnInit {
 
   onChangePaymentSelect() {
     this.addNewPaymentIsClicked.update(old => !old);
-    // if (event.value === 'NEW_PAYMENT') {
-    //   this.addNewPaymentIsClicked.set(true); // Muestra el sub-formulario
-
-    //   // Opcional: Limpiamos el valor del field para que no quede "NEW_PAYMENT" en tu modelo
-    //   this.registerFormModel.update(old => ({ ...old, payment: '' }));
-    // } else {
-    //   // Si elige cualquier otra tarjeta real, ocultamos el formulario de creación
-    //   this.addNewPaymentIsClicked.set(false);
-    // }
   }
 
   saveAccountOnClick(): void {

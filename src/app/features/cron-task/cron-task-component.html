@@ -1,0 +1,14 @@
+<div class="flex justify-center items-center">
+    <p-card 
+        header="Cron task schedule #1"
+        class="w-10/12 mt-5"
+        >
+        <ng-template #content>
+            Cron task that check every day at 12am if a order is expired and remove from active order list.
+        </ng-template>
+        <ng-template #footer styleClass="flex justify-end items-end">
+            <p-toggleButton onLabel="Active" offLabel="Deactive" styleClass="w-24" />
+        </ng-template>
+    </p-card>
+</div>
+

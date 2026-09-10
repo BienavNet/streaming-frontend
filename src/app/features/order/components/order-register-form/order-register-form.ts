@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit, output, signal } from '@angular/core';
+import { Component, inject, OnInit, output, signal } from '@angular/core';
 import { DialogModule } from 'primeng/dialog';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
@@ -8,8 +8,8 @@ import { FormsModule } from '@angular/forms';
 import { SelectFilterEvent, SelectModule } from 'primeng/select';
 import { ORDER_TYPES, OrderRegister } from '../../../../core/models/order.model';
 import { AccountService } from '../../../../core/services/account/account.service';
-import { Account, AccountDetails } from '../../../../core/models/account.model';
-import { form, required, FormField, schema } from '@angular/forms/signals';
+import { Account} from '../../../../core/models/account.model';
+import { form, required, FormField} from '@angular/forms/signals';
 import { MessageService } from 'primeng/api';
 import { OrderService } from '../../../../core/services/order/order.service';
 import { ApiError, ApiResponse } from '../../../../core/models/apiResponse';
@@ -59,16 +59,10 @@ export class OrderRegisterForm implements OnInit {
 
 
   ngOnInit(): void {
-    // this._loadAccountsWhenComponentIsReady();
-    // console.log(this.page().content)
     this._loadDebouncedFilterForAccount();
   }
 
   private _loadDebouncedFilterForAccount() {
-    // this.loading.set(true);
-
-    // this.accountService.loadPage().subscribe()
-
     this.filterAccountInput$.pipe(
       debounceTime(400),
       distinctUntilChanged(),
@@ -118,12 +112,13 @@ export class OrderRegisterForm implements OnInit {
   onSaveOrder() {
     if (!this.registerForm().valid()){
       var errors = this._getFormErrorMessage();
+      console.log(errors)
 
       errors.map(error => {
         if (!error || error === "")
           return
 
-        this._sendNotification("Form Error", "error", error)
+        this._sendNotification("Form Error", "error", error);
       })
 
       return

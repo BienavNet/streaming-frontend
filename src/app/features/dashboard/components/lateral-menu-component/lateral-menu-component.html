@@ -25,9 +25,9 @@
             [styleClass]="currentActiveTab() === 'payments' ? 'w-full active-tab' : 'w-full'" severity="secondary"
             (click)="setCurrentTab('payments')" />
         <span class="titleSeparator mx-4 mt-10 mb-2">AUTOMATION</span>
-        <p-button label="Comming soon" variant="text" class="w-full"
-            [styleClass]="currentActiveTab() === 'comming' ? 'w-full active-tab' : 'w-full'" severity="secondary"
-            (click)="setCurrentTab('comming soon')" />
+        <p-button icon="pi pi-list-check" label="Cron Tasks" variant="text" class="w-full"
+            [styleClass]="currentActiveTab() === 'crontasks' ? 'w-full active-tab' : 'w-full'" severity="secondary"
+            (click)="setCurrentTab('crontasks')" />
     </div>
 
 </div>

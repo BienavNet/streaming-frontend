@@ -4,16 +4,30 @@ export interface DashboardData {
     totalPlatforms: number,
     totalOrderMoney: number,
     accountsByPlatform: Array<AccountsByPlatform>,
-    membershipNearToExpire: Array<MembershipNearToExpire>
+    membershipNearToExpire: Array<MembershipNearToExpire>,
+    ordersNearToExpireQuery: Array<OrdersNearToExpireQuery>
 }
 
 interface MembershipNearToExpire {
     email: string,
     membershipExpireDate: Date,
-    isFreeTrial: boolean
+    isFreeTrial: boolean,
+    platform: string
 }
 
 interface AccountsByPlatform {
     name: string,
     quantity: number
+}
+
+interface OrdersNearToExpireQuery {
+    id: string,
+    accountEmail: string,
+    platformName: string,
+    planName: string,
+    profileAmount: number,
+    buyDate: Date,
+    finishDate: Date,
+    paymentAmount: number,
+    orderType: string
 }

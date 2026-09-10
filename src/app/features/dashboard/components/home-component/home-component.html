@@ -1,30 +1,27 @@
 <div class="w-full h-full card grid grid-cols-4 grid-rows-5 gap-4 p-3">
-    <p-card header="Accounts Registered" class="flex justify-center">
-        <div class="w-24 h-16 flex justify-center items-center bg-gray-300 border-2 border-gray-50 rounded-lg">
-            <span class="text-3xl">{{this.panelData()!.totalAccounts.toString()}}</span>
-        </div>
-    </p-card>
-    <p-card header="Orders Done">
-        <div class="w-24 h-16 flex justify-center items-center bg-gray-300 border-2 border-gray-50 rounded-lg">
-            <span class="text-3xl">{{this.panelData()!.totalOrders.toString()}}</span>
-        </div>
-    </p-card>
-    <p-card header="Platforms Registered">
-        <div class="w-24 h-16 flex justify-center items-center bg-gray-300 border-2 border-gray-50 rounded-lg">
-            <span class="text-3xl">{{this.panelData()!.totalPlatforms.toString()}}</span>
-        </div>
-    </p-card>
-    <p-card header="Money Collected">
-        <div class="w-36 h-16 flex justify-center items-center bg-gray-300 border-2 border-gray-50 rounded-lg">
-            <span class="text-3xl">{{`$${this.panelData()!.totalOrderMoney.toString()}`}}</span>
-        </div>
-    </p-card>
-    <p-card header="Membership going to be expired" class="row-span-2 col-span-2">
-        <p-table 
-            [value]="this.panelData()!.membershipNearToExpire"
-            size="small"
-            styleClass="m-5"
-        >
+        <p-card header="Accounts Registered" class="">
+            <div class="w-24 h-16 flex justify-center items-center bg-gray-300 border-2 border-gray-50 rounded-lg">
+                <span class="text-3xl">{{this.panelData()!.totalAccounts.toString()}}</span>
+            </div>
+        </p-card>
+        <p-card header="Orders Done" class="">
+            <div class="w-24 h-16 flex justify-center items-center bg-gray-300 border-2 border-gray-50 rounded-lg">
+                <span class="text-3xl">{{this.panelData()!.totalOrders.toString()}}</span>
+            </div>
+        </p-card>
+        <p-card header="Platforms Registered" class="">
+            <div class="w-24 h-16 flex justify-center items-center bg-gray-300 border-2 border-gray-50 rounded-lg">
+                <span class="text-3xl">{{this.panelData()!.totalPlatforms.toString()}}</span>
+            </div>
+        </p-card>
+        <p-card header="Money Collected" class="">
+            <div class="w-36 h-16 flex justify-center items-center bg-gray-300 border-2 border-gray-50 rounded-lg">
+                <span class="text-3xl">{{`$${this.panelData()!.totalOrderMoney.toString()}`}}</span>
+            </div>
+        </p-card>
+
+    <p-card header="Membership going to be expired" class="row-span-2 col-span-2 ">
+        <p-table [value]="this.panelData()!.membershipNearToExpire" size="large" styleClass="m-5">
             <ng-template #header>
                 <tr>
                     <th>Email</th>
@@ -37,19 +34,15 @@
                 <tr>
                     <td>{{membership.email}}</td>
                     <td>{{membership.membershipExpireDate}}</td>
-                    <td>Netflix</td>
+                    <td>{{membership.platform}}</td>
                     <td>{{membership.isFreeTrial ? "yes":"no"}}</td>
                 </tr>
             </ng-template>
 
         </p-table>
     </p-card>
-    <p-card header="Accounts registered by platform" class="row-span-2 col-span-2 text-md">
-        <p-table 
-            [value]="this.panelData()!.accountsByPlatform"
-            size="small"
-            styleClass="m-5"
-        >
+    <p-card header="Accounts registered by platform" class="row-span-2 col-span-2 text-md ">
+        <p-table [value]="this.panelData()!.accountsByPlatform" size="large" styleClass="m-5">
 
             <ng-template #header styleClass="mb-3">
                 <tr>
@@ -66,9 +59,31 @@
 
         </p-table>
     </p-card>
-    <p-card header="Ordenes por vencerse" class="row-span-2 col-span-full">
-        <p class="m-0">
-            Ordenes por vencerse
-        </p>
+    <p-card header="Ordenes por vencerse"
+        class="row-span-2 col-span-4 ">
+        <p-table [value]="this.panelData()!.ordersNearToExpireQuery" size="large" styleClass="m-5">
+
+            <ng-template #header styleClass="mb-3">
+                <tr>
+                    <th>Account</th>
+                    <th>Platform</th>
+                    <th>Plan</th>
+                    <th>Profiles</th>
+                    <th>Finish At</th>
+                    <th>Type</th>
+                </tr>
+            </ng-template>
+            <ng-template #body let-order>
+                <tr>
+                    <td>{{order.accountEmail}}</td>
+                    <td>{{order.platformName}}</td>
+                    <td>{{order.planName}}</td>
+                    <td>{{order.profileAmount}}</td>
+                    <td>{{order.finishDate}}</td>
+                    <td>{{order.orderType}}</td>
+                </tr>
+            </ng-template>
+
+        </p-table>
     </p-card>
 </div>

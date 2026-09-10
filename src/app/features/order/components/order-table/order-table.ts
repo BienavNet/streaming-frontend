@@ -8,14 +8,13 @@ import { ButtonModule } from 'primeng/button';
 import { OrderRegisterForm } from '../order-register-form/order-register-form';
 import { OrderDetailsComponent } from '../order-details-component/order-details-component';
 import { OrderService } from '../../../../core/services/order/order.service';
-import { OrderDetails } from '../../../../core/models/order.model';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { ConfirmationService } from 'primeng/api';
 import { TagModule } from 'primeng/tag';
 
 @Component({
   selector: 'app-order-table',
   imports: [TableModule, ConfirmDialogModule, PanelModule, ButtonModule, OrderRegisterForm, OrderDetailsComponent, TagModule],
-  providers: [ConfirmationService, MessageService],
+  providers: [ConfirmationService],
   templateUrl: './order-table.html',
   styleUrl: './order-table.css',
 })
