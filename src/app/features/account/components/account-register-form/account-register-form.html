@@ -1,7 +1,7 @@
 <form>
     <div class="card">
         <!-- <p-panel header="Register Platform Form" class="w-xl h-3/5 flex p-8 text-xl"> -->
-        <p-dialog header="Add new account" [draggable]="false" [modal]="true" [visible]="true" styleClass="w-xl"
+        <p-dialog header="Add new account" [draggable]="false" [modal]="true" [visible]="true" styleClass="w-xl min-w-0"
             [closable]="true" [blockScroll]="true" [autofocus]="true" [contentStyle]="{'overflow': 'visible'}" (onHide)="this.onCloseModal.emit()" closeOnEscape="true">
             <ng-template #header>
                 <div class="w-full flex flex-col justify-start items-start">
@@ -26,7 +26,7 @@
                 </p-floatlabel>
 
                 <div class="card w-full flex justify-center items-center flex-row gap-2">
-                    <div class="w-full flex flex-col justify-center items-start mt-6 gap-0.5">
+                    <div class="w-full min-w-0  flex flex-col justify-center items-start mt-6 gap-0.5">
                         <p-floatlabel variant="on" class="w-full">
                             <p-select [formField]="$any(this.registerForm.payment)"
                                 (onFilter)="this.onPaymentFilter($event)" [options]="this.payments()" optionValue="id"
@@ -52,7 +52,7 @@
                             <label for="addPayment" class="ml-2">Add new payment</label>
                         </div>
                     </div>
-                    <p-floatlabel variant="on" class="w-full">
+                    <p-floatlabel variant="on" class="w-full min-w-0">
                         <p-select [formField]="$any(this.registerForm.platform)"
                             (onFilter)="this.onPlatformFilter($event)" [options]="this.platforms()" optionValue="id"
                             inputId="platform" optionLabel="name" [filter]="true" filterBy="name" [showClear]="true"

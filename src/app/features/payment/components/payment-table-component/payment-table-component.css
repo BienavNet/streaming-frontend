@@ -1,6 +1,6 @@
 :host ::ng-deep .p-panel-content-container {
     display: flex;
-    justify-content: center;
+    justify-content: safe center;
     margin-top: .5rem;
     font-size: medium;
 }

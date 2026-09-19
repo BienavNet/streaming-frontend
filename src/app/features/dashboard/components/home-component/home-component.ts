@@ -17,7 +17,7 @@ export class HomeComponent implements OnInit {
     private dashboardService = inject(DashboardService);
     
     isLoading = signal<boolean>(false);
-    panelData = signal<DashboardData | null>(null);
+    panelData = signal<DashboardData>(Object.create(null));
 
 
     ngOnInit(): void {
@@ -30,11 +30,13 @@ export class HomeComponent implements OnInit {
         const sub = this.dashboardService.loadData().subscribe({
             next: (response) => {
                 this.isLoading.set(false);
-                this.panelData.set(response);
+                this.panelData.set(response!);
             },
             error: () => {
                 this.isLoading.set(false);
             }
         });
+
+        return () => sub.unsubscribe();
     }
 }

@@ -18,4 +18,5 @@ export class LateralMenuComponent {
     this.currentActiveTab.set(tabClicked.toLocaleLowerCase());
     this.currentSelectedTab.emit(this.currentActiveTab());
   }
+
 }

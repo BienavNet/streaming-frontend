@@ -1,20 +1,68 @@
 <p-confirmdialog />
-<div class="h-full card grid grid-cols-1 grid-rows-1 p-3 justify-items-center items-center">
-    <p-panel class="w-11/12 h-11/12 p-8 text-xl">
+<div class="h-full card grid grid-cols-1 grid-rows-1 p-3 lg:justify-items-center lg:items-center min-w-0">
+    <p-panel class="sm:w-full sm:h-52 lg:w-11/12 lg:h-11/12 p-8 text-xl overflow-scroll min-w-0">
         <ng-template #header>
             <div class="w-full flex flex-col justify-start items-start">
                 <div class="flex flex-row justify-center items-center gap-10">
                     <span class="font-bold text-3xl">Platforms</span>
                     <p-button size="small" class="flex items-center justify-start gap-2 whitespace-nowrap"
-                                label="Add Platform" icon="pi pi-plus" severity="secondary" (click)="this.onClickOpenRegisterForm()" />
+                        label="Add Platform" icon="pi pi-plus" severity="secondary"
+                        (click)="this.onClickOpenRegisterForm()" />
                 </div>
                 <div>
                     <span class="text-sm italic">You can manage here all about platforms.</span>
                 </div>
-                
+
             </div>
         </ng-template>
-        <p-table [value]="platformService.platforms()" class="w-full" [loading]="isLoading()">
+        <ng-template #content class="flex justify-end">
+            <div class="w-full min-w-0 overflow-x-auto">
+                <p-table [value]="platformService.platforms()" [loading]="isLoading()" size="small" showGridlines
+                    stripedRows styleClass="platforms-table" scrollHeight="400px">
+
+                    <ng-template #header>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Link</th>
+                            <th>Icon</th>
+                            <th>Plans</th>
+                            <th>Actions</th>
+                        </tr>
+                    </ng-template>
+
+                    <ng-template #body let-platform>
+                        <tr class="platform-row">
+                            <td data-label="ID">{{platform.id}}</td>
+                            <td data-label="Name">{{platform.name}}</td>
+                            <td data-label="Link">{{platform.link}}</td>
+                            <td data-label="Icon">
+                                <img [src]="platform.icon" [alt]="platform.name"
+                                    class="rounded-sm w-10 h-10 object-contain">
+                            </td>
+                            <td data-label="Plans">
+                                <p-button size="small"
+                                    class="flex items-center justify-start gap-2 whitespace-nowrap w-full"
+                                    label="View Plans" icon="pi pi-sparkles" severity="warn"
+                                    (click)="this.onClickViewPlans(platform.id)" />
+                            </td>
+                            <td data-label="Actions">
+                                <div class="card flex flex-row items-center justify-center gap-2">
+                                    <p-button size="small" label="Edit" icon="pi pi-pen-to-square" severity="info"
+                                        (click)="openEditPlatformModal(platform)" />
+                                    <p-button size="small" label="Delete" icon="pi pi-trash" severity="danger"
+                                        (click)="deletePlatformDialog($event, platform.id)" />
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+
+        </ng-template>
+
+        <!-- <p-table [value]="platformService.platforms()" [loading]="isLoading()" size="small" [scrollable]="true" scrollWidth="100%"
+            showGridlines stripedRows scrollHeight="15rem">
             <ng-template #header>
                 <tr>
                     <th>ID</th>
@@ -46,20 +94,20 @@
                     </td>
                 </tr>
             </ng-template>
-        </p-table>
+        </p-table> -->
 
         <!-- Modal para editar una plataforma -->
 
         @if (this.platformToEdit(); as data) {
-            <app-edit-platform-modal [oldData]="data" [idToUpdate]="data.id" (onCloseModal)="closeEditPlatformModal()" />
+        <app-edit-platform-modal [oldData]="data" [idToUpdate]="data.id" (onCloseModal)="closeEditPlatformModal()" />
         }
 
         @if (this.isOpenedRegisterForm()) {
-            <app-platform-register-form (onCloseModal)="this.closeRegisterPlatformModal()" />
+        <app-platform-register-form (onCloseModal)="this.closeRegisterPlatformModal()" />
         }
 
         @if (this.platformSelectedId()) {
-            <app-plan (closeModal)="closeViewPlansModal()" [platformId]="this.platformSelectedId()!"   />
+        <app-plan (closeModal)="closeViewPlansModal()" [platformId]="this.platformSelectedId()!" />
         }
 
     </p-panel>

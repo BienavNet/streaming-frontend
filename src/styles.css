@@ -8,3 +8,8 @@
     --color-content-background: #6a89a7;
     --font-color-menu: #ffffff;
 }
+
+body {
+    width: 100%;
+    height: 100vh;
+}
