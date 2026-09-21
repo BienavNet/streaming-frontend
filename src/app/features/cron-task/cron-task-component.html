@@ -2,24 +2,32 @@
 <div class="flex justify-center items-center">
 
     @for (task of this.tasks(); track $index) {
-        <p-card 
-            [header]="task.name"
-            class="w-10/12 mt-5"
-            >
-            <ng-template #content>
-                <div>
-                    {{task.description}}
+    <p-card [header]="task.name" class="w-10/12 mt-5">
+        <ng-template #content>
+            <div class="ml-5">
+                <div class="flex flex-col mt-3">
+                    <span><b>Task Description:</b></span>
+                    <p class="ml-5">{{task.description}}</p>
                 </div>
-                <div>
-                    <span>Current Status: {{task.active ? 'Active' : 'Deactive'}}</span>
+                <div class="flex flex-row items-center gap-3 my-5">
+                    <span><b>Current Status:</b></span>
+                    <span><p-tag [severity]="task.active ? 'success' : 'danger'"
+                            [value]="task.active ? 'Active' : 'Deactive'" /></span>
                 </div>
-            </ng-template>
-            <ng-template #footer styleClass="flex justify-end items-end">
-                <p-button (click)="this.onToggleButtonChange(task.id, !task.active)" [label]="task.active ? 'Disable' : 'Enable'" [icon]="task.active ? 'pi pi-power-off' : 'pi pi-play-circle'" />
-                <!-- <p-toggleButton onLabel="Active" offLabel="Deactive" styleClass="w-24" (onChange)=""  /> -->
-            </ng-template>
-        </p-card>
+            </div>
+
+        </ng-template>
+        <ng-template #footer>
+            <div class="w-full flex justify-end items-end">
+                <p-button (click)="this.onToggleButtonChange(task.id, !task.active)"
+                    [label]="task.active ? 'Disable' : 'Enable'"
+                    [icon]="task.active ? 'pi pi-power-off' : 'pi pi-play-circle'"
+                    [severity]="task.active ? 'danger' : 'secondary'" />
+            </div>
+
+            <!-- <p-toggleButton onLabel="Active" offLabel="Deactive" styleClass="w-24" (onChange)=""  /> -->
+        </ng-template>
+    </p-card>
     }
 
 </div>
-

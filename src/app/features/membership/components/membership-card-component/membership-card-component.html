@@ -4,8 +4,8 @@
             <span class="block"><b>Plan:</b> {{this.membership().details.plan}}</span>
             <span class="block"><b>Profiles Quantity:</b> {{this.membership().details.profiles}}</span>
             <span class="block"><b>Free Trial:</b> {{this.membership().isFreeTrial ? "yes" : "no"}}</span>
-            <span class="block"><b>Buy At:</b> {{this.membership().membershipBuyDate}}</span>
-            <span class="block"><b>Ends At:</b> {{this.membership().membershipExpireDate}}</span>
+            <span class="block"><b>Buy At:</b> {{this.membership().membershipBuyDate | date}}</span>
+            <span class="block"><b>Ends At:</b> {{this.membership().membershipExpireDate | date}}</span>
         </div>
     </div>
 </p-card>

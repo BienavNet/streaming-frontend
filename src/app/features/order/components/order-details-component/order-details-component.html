@@ -29,15 +29,15 @@
             <div class="card gap-2 w-full flex flex-col items-start justify-between">
                 <p-message severity="secondary" class="w-full"><b>Order Id: </b>{{orderDetails()?.id}}</p-message>
                 <p-message severity="secondary" class="w-full"><b>Account Email: </b>{{orderDetails()?.accountEmail}}</p-message>
-                <p-message severity="secondary" class="w-full"><b>Buy Date: </b>{{orderDetails()?.buyDate}}</p-message>
-                <p-message severity="secondary" class="w-full"><b>Finish Date: </b>{{orderDetails()?.finishDate}}</p-message>
+                <p-message severity="secondary" class="w-full"><b>Buy Date: </b>{{orderDetails()?.buyDate | date}}</p-message>
+                <p-message severity="secondary" class="w-full"><b>Finish Date: </b>{{orderDetails()?.finishDate | date}}</p-message>
                 <p-message severity="secondary" class="w-full platform-container" id="platform-container"><b>Platform: </b> {{orderDetails()?.platformName}}</p-message>
                 <p-message severity="secondary" class="w-full"><b>Plan Acquired: </b>{{orderDetails()?.plan}}</p-message>
                 <p-message severity="secondary" class="w-full"><b>Order Type: </b>{{orderDetails()?.orderType}}</p-message>
                 @if (orderDetails()?.orderType !== "full") {
                     <p-message severity="secondary" class="w-full"><b>Profiles Acquired: </b>{{orderDetails()?.profileAmount}}</p-message>
                 }
-                <p-message severity="secondary" class="w-full"><b>Total Paid: </b>${{orderDetails()?.paymentAmount}}</p-message>
+                <p-message severity="secondary" class="w-full"><b>Total Paid: </b>{{orderDetails()?.paymentAmount | currency}}</p-message>
             </div>
         }
 

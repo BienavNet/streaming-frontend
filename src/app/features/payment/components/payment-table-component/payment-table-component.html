@@ -11,23 +11,13 @@
                 <div>
                     <span class="text-sm italic">You can look all details about payments.</span>
                 </div>
-                
+
             </div>
         </ng-template>
-        <p-table 
-            [value]="this.page().content"
-            class="w-full" 
-            [loading]="this.isLoading()" 
-            [scrollable]="true"
-            [paginator]="true"
-            [rows]="this.page().currentSize"
-            sortField="email"
-            (onPage)="this.onPaginationOccurs($event)"
-            [rowsPerPageOptions]="[5, 10, 20]"
-            showGridlines
-            stripedRows 
-            scrollHeight="400px"
-            >
+        <p-table [value]="this.page().content" class="w-full min-w-0" [loading]="this.isLoading()" [scrollable]="true"
+            [paginator]="true" [rows]="this.page().currentSize" sortField="email"
+            (onPage)="this.onPaginationOccurs($event)" [rowsPerPageOptions]="[5, 10, 20]" showGridlines stripedRows
+            scrollHeight="400px">
             <ng-template #header>
                 <tr>
                     <th>ID</th>
@@ -39,13 +29,16 @@
             <ng-template #body let-payment class="text-sm">
                 <tr>
                     <td class="w-1/12">{{payment.id}}</td>
-                    <td>{{payment.card}}</td>
+                    <td>{{this.revealedCards().has(payment.id) ? payment.card : payment.card | paymentHideDetailsPipe }}</td>
                     <td>{{payment.bankName}}</td>
                     <td>
                         <div class="card flex flex-row items-center justify-center gap-1">
+                            <p-button size="small" class="flex items-center justify-start gap-2 whitespace-nowrap "
+                                [label]="this.revealedCards().has(payment.id) ? 'Hide' : 'Show'" icon="pi pi-id-trash" severity="secondary"
+                                (click)="this.onClickShowInfo(payment.id)" />
                             <p-button size="small" class="flex items-center justify-start gap-2 whitespace-nowrap"
-                                label="Delete" icon="pi pi-id-trash" severity="danger" (click)="this.onClickDeleteBtn($event, payment.id)" />
-
+                                label="Delete" icon="pi pi-id-trash" severity="danger"
+                                (click)="this.onClickDeleteBtn($event, payment.id)" />
                         </div>
                     </td>
                 </tr>

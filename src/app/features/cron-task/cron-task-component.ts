@@ -7,9 +7,11 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { ApiError } from '../../core/models/apiResponse';
 import { ButtonModule } from 'primeng/button';
 
+import { TagModule } from 'primeng/tag';
+
 @Component({
   selector: 'app-cron-task-component',
-  imports: [CardModule, ConfirmDialogModule, ButtonModule],
+  imports: [CardModule, ConfirmDialogModule, ButtonModule, TagModule],
   providers: [ConfirmationService], 
   templateUrl: './cron-task-component.html',
   styleUrl: './cron-task-component.css',

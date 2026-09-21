@@ -6,6 +6,9 @@ import { OrderService } from '../../../../core/services/order/order.service';
 import { Order } from '../../../../core/models/order.model';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
+import { CurrencyPipe, DatePipe } from '@angular/common';
+
+
 
 @Component({
   selector: 'app-order-details-component',
@@ -14,7 +17,9 @@ import { MessageModule } from 'primeng/message';
     IftaLabelModule, 
     ButtonModule,
     InputTextModule,
-    MessageModule
+    MessageModule,
+    CurrencyPipe,
+    DatePipe
   ],
   templateUrl: './order-details-component.html',
   styleUrl: './order-details-component.css',

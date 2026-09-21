@@ -18,11 +18,11 @@
     </p-card>
     <p-card header="Money Collected" class="sm:col-span-full lg:col-span-1 lg:row-span-1 h-50 ">
         <div class="w-1/2 h-1/5 flex justify-center items-center bg-gray-300 border-2 border-gray-50 rounded-lg">
-            <span class="text-3xl p-4">{{`$${this.panelData()!.totalOrderMoney.toString()}`}}</span>
+            <span class="text-3xl p-4">{{`${this.panelData()!.totalOrderMoney.toString() | currency}`}}</span>
         </div>
     </p-card>
 
-    <p-card header="Membership going to be expired" class="sm:col-span-full sm:row-span-1 lg:row-span-1 lg:col-span-2">
+    <p-card header="Membership going to be expired" class="sm:col-span-full sm:row-span-1 lg:row-span-1 lg:col-span-2 min-w-0">
         <p-table [value]="this.panelData()!.membershipNearToExpire" size="small" styleClass="m-5" [scrollable]="true"
             showGridlines stripedRows [scrollable]="true" scrollHeight="15rem">
             <ng-template #header>
@@ -36,7 +36,7 @@
             <ng-template #body let-membership>
                 <tr>
                     <td>{{membership.email}}</td>
-                    <td>{{membership.membershipExpireDate}}</td>
+                    <td>{{membership.membershipExpireDate | date}}</td>
                     <td>{{membership.platform}}</td>
                     <td>{{membership.isFreeTrial ? "yes":"no"}}</td>
                 </tr>
@@ -45,7 +45,7 @@
         </p-table>
     </p-card>
     <p-card header="Accounts registered by platform"
-        class="sm:col-span-full sm:row-span-1 lg:row-span-1 lg:col-span-2 text-md ">
+        class="sm:col-span-full sm:row-span-1 lg:row-span-1 lg:col-span-2 text-md min-w-0">
         <p-table [value]="this.panelData()!.accountsByPlatform" size="small" styleClass="m-5" [scrollable]="true"
             showGridlines stripedRows [scrollable]="true" scrollHeight="15rem">
 
@@ -64,8 +64,7 @@
 
         </p-table>
     </p-card>
-    <p-card header="Ordenes por vencerse" class="sm:col-span-full sm:row-span-1 lg:row-span-1 lg:col-span-full text-md">
-
+    <p-card header="Ordenes por vencerse" class="sm:col-span-full sm:row-span-1 lg:row-span-1 lg:col-span-full text-md min-w-0">
         <div class="w-full overflow-x-auto flex justify-center items-center">
             <p-table [value]="this.panelData()!.ordersNearToExpireQuery" size="small" styleClass="sm:m-1"
                 [scrollable]="true" scrollHeight="200px" style="width: 80%; min-width: 300px;" showGridlines
@@ -88,7 +87,7 @@
                         <td >{{order.platformName}}</td>
                         <td >{{order.planName}}</td>
                         <td >{{order.profileAmount}}</td>
-                        <td >{{order.finishDate}}</td>
+                        <td >{{order.finishDate | date}}</td>
                         <td >{{order.orderType}}</td>
                     </tr>
                 </ng-template>

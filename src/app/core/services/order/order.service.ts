@@ -37,12 +37,19 @@ export class OrderService {
         return throwError(() => apiError);
     })
 
-    loadPage(page?: number, offset?: number) : Observable<void> {
+    loadPage(page?: number, offset?: number, isShowingRecords?: boolean) : Observable<void> {
         if (!page)
             page = this.PAGE
         if (!offset)
             offset = this.OFFSET
 
+        return !isShowingRecords ?
+            this._getCurrentOrders(page, offset) :
+            this._getOrderRecords(page, offset);
+
+    }
+
+    private _getCurrentOrders(page: number, offset: number): Observable<void> {
         return this.http.get<ApiResponse<Pagination<OrderDetails[]>>>(`${this.apiUrl}/orders/${page}/${offset}`)
             .pipe(
                 map(response => response.data as Pagination<OrderDetails[]>),
@@ -55,8 +62,23 @@ export class OrderService {
                 map(() => {}),
                 catchError(this.defineCatchError)
             )
-
     }
+
+    private _getOrderRecords(page: number, offset: number): Observable<void> {
+        return this.http.get<ApiResponse<Pagination<OrderDetails[]>>>(`${this.apiUrl}/records/${page}/${offset}`)
+            .pipe(
+                map(response => response.data as Pagination<OrderDetails[]>),
+                tap(data => {
+                    this._pagination.set({
+                        ...data,
+                        currentSize: data.content.length < offset ? data.content.length : offset
+                    })
+                }),
+                map(() => {}),
+                catchError(this.defineCatchError)
+            )
+    }
+
 
     saveOrder(order: OrderRegister) : Observable<string> {
         return this.http.post<ApiResponse<string>>(this.apiUrl, order)
@@ -74,8 +96,5 @@ export class OrderService {
                 )
     }
 
-    // createOrder(order: OrderRegister): Observable<string> {
-        
-    // }
 
 }

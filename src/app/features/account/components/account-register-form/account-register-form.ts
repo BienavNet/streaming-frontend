@@ -23,6 +23,8 @@ import { Payment, PaymentRegister } from '../../../../core/models/payment.model'
 import { debounceTime, distinctUntilChanged, of, Subject, switchMap, takeUntil } from 'rxjs';
 import { ApiResponse } from '../../../../core/models/apiResponse';
 
+import { PaymentHideDetailsPipePipe } from '../../../../shared/pipes/paymentHideDetails/payment-hide-details-pipe-pipe';
+
 @Component({
   selector: 'app-account-register-form',
   imports: [
@@ -34,7 +36,8 @@ import { ApiResponse } from '../../../../core/models/apiResponse';
     DatePickerModule,
     SelectModule,
     CheckboxModule,
-    Dialog
+    Dialog,
+    PaymentHideDetailsPipePipe
   ],
   templateUrl: './account-register-form.html',
   styleUrl: './account-register-form.css',

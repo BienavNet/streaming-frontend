@@ -7,9 +7,11 @@ import { TableModule } from "primeng/table";
 import { AvatarModule } from 'primeng/avatar';
 import { AvatarGroupModule } from 'primeng/avatargroup';
 
+import { CurrencyPipe, DatePipe } from '@angular/common';
+
 @Component({
   selector: 'app-home-component',
-  imports: [CardModule, TableModule, AvatarModule, AvatarGroupModule],
+  imports: [CardModule, TableModule, AvatarModule, AvatarGroupModule, CurrencyPipe, DatePipe],
   templateUrl: './home-component.html',
   styleUrl: './home-component.css',
 })

@@ -1,59 +1,70 @@
-<p-confirmdialog />    
+<p-confirmdialog />
 <div class="h-full card grid grid-cols-1 grid-rows-1 p-3 lg:justify-items-center lg:items-center min-w-0">
     <p-panel class="sm:w-full sm:h-full lg:w-11/12 lg:h-11/12 p-8 text-xl overflow-scroll min-w-0">
         <ng-template #header>
             <div class="w-full flex flex-col justify-start items-start">
                 <div class="flex flex-row justify-center items-center gap-10">
                     <span class="font-bold text-3xl">Orders</span>
-                    <p-button size="small" class="flex items-center justify-start gap-2 whitespace-nowrap" label="Add Order"
-                    icon="pi pi-plus" severity="secondary" (click)="this.onClickNewBtn()" />
+                    <p-button size="small" class="flex items-center justify-start gap-2 whitespace-nowrap"
+                        label="Add Order" icon="pi pi-plus" severity="secondary" (click)="this.onClickNewBtn()" [disabled]="this.isOrderHistoryActive()" />
+                    <p-button size="small" class="flex items-center justify-start gap-2 whitespace-nowrap"
+                        [label]="this.isOrderHistoryActive() ? 'Show Current' : 'Show History'" icon="pi pi-history"
+                        severity="secondary" (click)="this.onClickShowHistoryBtn()" />
                 </div>
                 <div>
                     <span class="text-sm italic">You can manage here all about orders.</span>
                 </div>
-                
+
             </div>
         </ng-template>
-        <p-table 
-            [value]="this.page().content"
-            class="w-full" 
-            [loading]="this.isLoading()" 
-            [scrollable]="true"
-            [paginator]="true"
-            [rows]="page().currentSize"
-            [totalRecords]="page().totalPages ? page().totalPages : 1"
-            sortField="email"
-            (onPage)="onPaginationOccurs($event)"
-            [rowsPerPageOptions]="[5, 10, 20]"
-            showGridlines
-            stripedRows 
-            scrollHeight="400px"
-            >
+        <p-table [value]="this.page().content" class="w-full" [loading]="this.isLoading()" [scrollable]="true"
+            [paginator]="true" [rows]="page().currentSize" [totalRecords]="page().totalPages ? page().totalPages : 1"
+            sortField="email" (onPage)="onPaginationOccurs($event)" [rowsPerPageOptions]="[5, 10, 20]" showGridlines
+            stripedRows scrollHeight="400px">
             <ng-template #header>
                 <tr>
                     <th>ID</th>
                     <th>Account Email</th>
                     <th>Platform</th>
-                    <th>Buy At</th>
                     <th>Type</th>
-                    <th>Actions</th>
+                    <th>Buy At</th>
+                    @if (!this.isOrderHistoryActive()) {
+                        <th>Actions</th>
+                    }@else {
+                        <th>Finish Date</th>
+                        <th>Payment</th>
+                    }
                 </tr>
             </ng-template>
             <ng-template #body let-order class="text-sm">
                 <tr>
                     <td class="w-1/12">{{order.id}}</td>
                     <td>{{order.accountEmail}}</td>
-                    <td>{{order.platformName}}</td>
-                    <td>{{order.buyDate}}</td>
+                    @if (!this.isOrderHistoryActive()) {
+                        <td>
+                            <div class="w-full flex flex-col justify-center items-center">
+                                <img [src]="order.platformIcon" style="width: 3rem" />
+                                <div>{{ order.platformName }}</div>
+                            </div>
+                        </td>
+                    }@else {
+                        <td>{{order.platformName}}</td>
+                    }
                     <td><p-tag severity="info" [value]="order.orderType" /></td>
-                    <td>
-                        <div class="card flex flex-row items-center justify-center gap-1">
-                            <p-button size="small" class="flex items-center justify-start gap-2 whitespace-nowrap"
-                                label="Show Info" icon="pi pi-id-card" severity="info" 
-                                (click)="onClickShowInfoBtn(order.id)" />
-
-                        </div>
-                    </td>
+                    <td>{{order.buyDate | date}}</td>
+                    @if (!this.isOrderHistoryActive()) {
+                        <td>
+                            
+                            <div class="card flex flex-row items-center justify-center gap-1">
+                                <p-button size="small" class="flex items-center justify-start gap-2 whitespace-nowrap"
+                                    label="Show Info" icon="pi pi-id-card" severity="info"
+                                    (click)="onClickShowInfoBtn(order.id)" />
+                            </div>
+                        </td>
+                    }@else {
+                        <td>{{order.finishDate | date}}</td>
+                        <td>{{order.paymentAmount | currency}}</td>
+                    }
                 </tr>
 
 
@@ -62,14 +73,11 @@
     </p-panel>
 
     @if (this.isAddNewClicked()) {
-        <app-order-register-form (onCloseModal)="this.onClickNewBtn()" />
+    <app-order-register-form (onCloseModal)="this.onClickNewBtn()" />
     }
 
     @if (this.showOrderDetailsId()) {
-        <app-order-details-component
-            [orderId]="showOrderDetailsId()!"
-            (onCloseModal)="onCloseDetailsModal()"
-        />
+    <app-order-details-component [orderId]="showOrderDetailsId()!" (onCloseModal)="onCloseDetailsModal()" />
     }
 
 </div>

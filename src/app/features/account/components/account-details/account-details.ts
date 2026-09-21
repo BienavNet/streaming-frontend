@@ -24,9 +24,12 @@ import { debounceTime, distinctUntilChanged, of, Subject, switchMap, takeUntil }
 import { Platform } from '../../../../core/models/platform.model';
 import { Payment } from '../../../../core/models/payment.model';
 
+import { PaymentHideDetailsPipePipe } from '../../../../shared/pipes/paymentHideDetails/payment-hide-details-pipe-pipe';
+import { DatePipe } from '@angular/common';
+
 @Component({
   selector: 'app-account-details',
-  imports: [FormsModule, PanelModule, IftaLabelModule, InputTextModule, DialogModule, ButtonModule, ToggleButtonModule, DatePickerModule, SelectModule, FloatLabelModule, FormField],
+  imports: [FormsModule, PanelModule, IftaLabelModule, InputTextModule, DialogModule, ButtonModule, ToggleButtonModule, DatePickerModule, SelectModule, FloatLabelModule, FormField, PaymentHideDetailsPipePipe, DatePipe],
   templateUrl: './account-details.html',
   styleUrl: './account-details.css',
 })

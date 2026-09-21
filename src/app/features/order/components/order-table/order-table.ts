@@ -11,9 +11,11 @@ import { OrderService } from '../../../../core/services/order/order.service';
 import { ConfirmationService } from 'primeng/api';
 import { TagModule } from 'primeng/tag';
 
+import { CurrencyPipe, DatePipe } from '@angular/common';
+
 @Component({
   selector: 'app-order-table',
-  imports: [TableModule, ConfirmDialogModule, PanelModule, ButtonModule, OrderRegisterForm, OrderDetailsComponent, TagModule],
+  imports: [TableModule, ConfirmDialogModule, PanelModule, ButtonModule, OrderRegisterForm, OrderDetailsComponent, TagModule, CurrencyPipe, DatePipe],
   providers: [ConfirmationService],
   templateUrl: './order-table.html',
   styleUrl: './order-table.css',
@@ -26,12 +28,13 @@ export class OrderTable implements OnInit {
   
   isAddNewClicked = signal<boolean>(false)
   showOrderDetailsId = signal<string | null>(null);
+  isOrderHistoryActive = signal<boolean>(false);
 
   page = this.orderService.page
 
   private loadOrders(page?: number, offset?: number) {
     this.isLoading.set(true);
-    const sub = this.orderService.loadPage(page, offset).subscribe({
+    const sub = this.orderService.loadPage(page, offset, this.isOrderHistoryActive()).subscribe({
       next: () => {
         this.isLoading.set(false);
       },
@@ -62,5 +65,10 @@ export class OrderTable implements OnInit {
 
   onCloseDetailsModal(): void {
     this.showOrderDetailsId.set(null);
+  }
+
+  onClickShowHistoryBtn() : void {
+    this.isOrderHistoryActive.update(old => !old);
+    this.loadOrders();
   }
 }

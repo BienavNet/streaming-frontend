@@ -6,11 +6,13 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { PaymentService } from '../../../../core/services/payment/payment.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 
+import { PaymentHideDetailsPipePipe } from '../../../../shared/pipes/paymentHideDetails/payment-hide-details-pipe-pipe';
+
 import { ApiError } from '../../../../core/models/apiResponse';
 
 @Component({
   selector: 'app-payment-table-component',
-  imports: [TableModule, PanelModule, ButtonModule, ConfirmDialogModule],
+  imports: [TableModule, PanelModule, ButtonModule, ConfirmDialogModule, PaymentHideDetailsPipePipe],
   providers: [ConfirmationService],
   templateUrl: './payment-table-component.html',
   styleUrl: './payment-table-component.css',
@@ -22,6 +24,7 @@ export class PaymentTableComponent implements OnInit {
   private confirmationService = inject(ConfirmationService);
 
   isLoading = signal<boolean>(false);
+  revealedCards = signal<Set<string>>(new Set());
   
 
   page = this.paymentService.page
@@ -88,5 +91,19 @@ export class PaymentTableComponent implements OnInit {
         }
       })
     }
+
+    onClickShowInfo(id: string) {
+        this.revealedCards.update(old => {
+            const set = new Set(old);
+
+            if (set.has(id))
+                set.delete(id)
+            else
+                set.add(id)
+
+            return set;
+        })
+    }
+
 
 }

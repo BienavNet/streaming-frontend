@@ -34,12 +34,12 @@
                                 class="w-full" appendTo="body">
                                 <ng-template #selectedItem let-selectedOption>
                                     <div class="flex items-center gap-2">
-                                        <div>{{ selectedOption.card }}</div>
+                                        <div>{{ selectedOption.card | paymentHideDetailsPipe}}</div>
                                     </div>
                                 </ng-template>
                                 <ng-template let-payment #item>
                                     <div class="flex items-center gap-2">
-                                        <div>{{ payment.card }}</div>
+                                        <div>{{ payment.card | paymentHideDetailsPipe}}</div>
                                     </div>
                                 </ng-template>
                             </p-select>
